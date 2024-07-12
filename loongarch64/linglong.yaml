@@ -1,0 +1,1527 @@
+# SPDX-FileCopyrightText: 2023-2024 UnionTech Software Technology Co., Ltd.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+version: "1"
+
+package:
+  id: org.deepin.movie
+  name: "deepin-movie"
+  version: 6.1.0.0
+  kind: app
+  description: |
+    movie for deepin os.
+
+base: com.uniontech.foundation/20.0.0/loongarch64
+runtime: com.uniontech.Runtime/20.0.1/loongarch64
+
+command:
+  - deepin-movie
+
+build: |
+  cat /var/lib/dpkg/status|grep "^Package: " > $PREFIX/packages.list
+  bash ./install_dep linglong/sources "$PREFIX"
+  cp $PREFIX/lib/loongarch64-linux-gnu/blas/libblas.* $PREFIX/lib/loongarch64-linux-gnu/
+  cp $PREFIX/lib/loongarch64-linux-gnu/lapack/liblapack.* $PREFIX/lib/loongarch64-linux-gnu/
+  mkdir build || true
+  cd build
+  cmake -DVERSION=6.1.0.0 \
+        -DCMAKE_INSTALL_PREFIX=${PREFIX} \
+        -DLINGLONG_BUILD_ON=1 \
+        ${extra_args} ../linglong/sources/deepin-movie-reborn
+
+  make -j6
+  make -j1 install
+  
+sources:
+  - kind: git
+    url: https://github.com/linuxdeepin/deepin-movie-reborn
+    commit: 1f8249e0855d294017498b4faebfa72f003acc18
+    
+  # linglong:gen_deb_source sources loongarch64 https://pools.uniontech.com/desktop-professional eagle/1070 main
+  # linglong:gen_deb_source install libdtkwidget-dev, libdtkgui-dev, libdtkcore5-bin, libqt5sql5-sqlite, libmpv-dev, libxcb1-dev, libxcb-util0-dev, libffmpegthumbnailer-dev, libxcb-shape0-dev, libxcb-ewmh-dev, xcb-proto, x11proto-record-dev, libxtst-dev, libavcodec-dev, libavformat-dev, libavutil-dev, libpulse-dev, libdvdnav-dev, libgsettings-qt-dev, libmpris-qt5-dev, libdbusextended-qt5-dev, libva-dev, libgstreamer-plugins-base1.0-dev, libgstreamer1.0-dev, libgmock-dev
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/a/adduser/adduser_3.118+sign_all.deb
+    digest: 08b8e8e231876cb8a053bd091e64837d9fe706ac029b5be401ddb79ab03a0cff
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/b/binutils/binutils_2.31.1.4-16.lnd.vec.25_loongarch64.deb
+    digest: d3bc908407d5c9bf4ebea51bc67256e8a2c8071dc712ae1adf8059d09ff886cd
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/b/binutils/binutils-common_2.31.1.4-16.lnd.vec.25_loongarch64.deb
+    digest: 04a56dedf403fe589043a088e7c45fbe0f502c9a5f995dcad60d3bce6bfc6f13
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/b/binutils/binutils-loongarch64-linux-gnu_2.31.1.4-16.lnd.vec.25_loongarch64.deb
+    digest: 830d6f3e66ebeebc4cf6d83d7da6c5c73d503a20910f18aa41317c35371e5fc5
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/b/bzip2/bzip2_1.0.6.2-deepin2+sign_loongarch64.deb
+    digest: 271e67afaee401e1163eb599923d67b33f5c014659fef1e223df613a802a6d84
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/c/coreutils/coreutils_8.32.2-3+sign_loongarch64.deb
+    digest: 94b3a88eb882dce15beef44461dadb31026fa14365320180ac9ee3c90127513e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dbus/dbus_1.12.20.11-deepin1_loongarch64.deb
+    digest: 0406cacc7f5015290f733ebc96543549f57924aa3f3bde4d28e49ed7d0d81465
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dbus/dbus-user-session_1.12.20.11-deepin1_loongarch64.deb
+    digest: 178719b4cc29897ff6dd6ec2d0f79e8c5910d502e21391c61fbc22243ec82602
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dconf/dconf-gsettings-backend_0.30.1-2_loongarch64.deb
+    digest: eb6537a24980dfe7f41dbf6c6ef645c3c0ead96ae9b889b830f82cde67d9d602
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dconf/dconf-service_0.30.1-2_loongarch64.deb
+    digest: 56c5c0e49a700cb8a73519e3552ccfedfaaf74f2076faa68f4ceda794890fa92
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/debconf/debconf_1.5.71+sign_all.deb
+    digest: fe20391f126538bfc0904a2da90731297659dffa6054fe2df79dbb777956098b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/lvm2/dmsetup_1.02.155-3+d1_loongarch64.deb
+    digest: 18c7b9947a6d0643a86bf8444151c410c1a606341fda3e73e3ed9d19b3a305ab
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dpkg/dpkg_1.19.7.19-1+dde+sign_loongarch64.deb
+    digest: 04bf7512128159a444850ad97ede08691fc3412e06ea4ddf762445a4f7f5a1e5
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dpkg/dpkg-dev_1.19.7.19-1+dde+sign_all.deb
+    digest: 22504b27e5816ea156c5adb21e213c2d87dd5310f1bd8fc3992ee45778acff1c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/u/util-linux/fdisk_2.33.1.21-1+dde_loongarch64.deb
+    digest: b356f7c938d3635dcd8fa84f3bbcade7b0b2a5986a621dffe0862b317b2b41ba
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/fontconfig/fontconfig_2.13.1.1-2+sign_loongarch64.deb
+    digest: a88c37b821f3e0f6f05ec96cd0263fb15152a8a50cbfb5f16617358227b24d4c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/fontconfig/fontconfig-config_2.13.1.1-2+sign_all.deb
+    digest: 500872dfdab271001835a8c9ff41e6a7bd2db0bf3927f177060823d0d4f1cf3a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/fonts-dejavu/fonts-dejavu-core_2.37-1+sign_all.deb
+    digest: e98ebe491b7c847549acfd13d6f170f6c8d974824e01edc6a4394cf88c5fb232
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/fonts-liberation/fonts-liberation_1.07.4-9_all.deb
+    digest: c936aebbfd0af7851399ae5ab08bb01744f5e3381f7678fb87cc77114f95ef53
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gcc-8/gcc-8-base_8.3.0.13-deepin1_loongarch64.deb
+    digest: 38ee054d46d5bb0af87388ab08d7eb8fb95ab79ec352e4c78f4a724a45b60654
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gobject-introspection/gir1.2-glib-2.0_1.58.3-2+sign_loongarch64.deb
+    digest: 785920ef57ddcf534f6b35e4d9fbc310470202a0b0a60e30cb47a40342d89314
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gst-plugins-base1.0/gir1.2-gst-plugins-base-1.0_1.14.4.1-2+deb10u1+sign_loongarch64.deb
+    digest: e87af032bd8bc7738a388c8fb8ad206df49bdbcc64e7b0db68082f2af4690ccb
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gstreamer1.0/gir1.2-gstreamer-1.0_1.14.4.2-1+dde+sign_loongarch64.deb
+    digest: 2b17aa7569e367dcefc33d128d26a98e0294c01fc4f6e55ada16b31df767aeec
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/googletest/googletest_1.8.1-3_loongarch64.deb
+    digest: 98e8310d5b5d19de64efc571901b88215f81d2cba1215bec2c7ede076d712494
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/i/iso-codes/iso-codes_4.2.1-1+sign_all.deb
+    digest: 173c3134d67bce900ae5acc4cc22143e07bb6142014370569317600eb48c8187
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/a/acl/libacl1_2.2.53-4+sign_loongarch64.deb
+    digest: 03aa1a646821b7ec2e8ff75d6a6460ac776b231eeae1258acb9d475f0b8dc13d
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/a/aom/libaom0_1.0.0.1-1+dde+sign_loongarch64.deb
+    digest: e66f998072b6bdef745b264c069c045e91b51a2c5f2f76103609845ffa4713af
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/a/apparmor/libapparmor1_2.13.2-10+sign_loongarch64.deb
+    digest: 97227e94c5b69f7082f539997ba3c8de750df424ddc3d0040b3da56594b21251
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/a/argon2/libargon2-1_0~20171227-0.2+sign_loongarch64.deb
+    digest: df80b6e8025a48345137c956bf20262770440b5af8499d7aa1875efdc4c73b95
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/a/alsa-lib/libasound2_1.1.8.4-deepin1+sign_loongarch64.deb
+    digest: 8769ba29af136d539967787678faceb816f131392c274fc21034829b58348116
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/a/alsa-lib/libasound2-data_1.1.8.4-deepin1+sign_all.deb
+    digest: 17c643fe298129b14473d66ddc065eb0ed97fb5efe8e68962d66a502f35ba1c7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/liba/libass/libass9_0.14.0-2+sign_loongarch64.deb
+    digest: 4ab2c040b1423412269547257f941fe8e76d80b3bf56b7f6977d5ec8070ee5a1
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/liba/libasyncns/libasyncns0_0.8-6+sign_loongarch64.deb
+    digest: f51f509917e67ff62b83688f3a097fcb1abcc3a2884e33c866e0b41a5552ad09
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gcc-8/libatomic1_8.3.0.13-deepin1_loongarch64.deb
+    digest: 54880da1d330c9b94ffd40978ff1c921a56dc3a9d88fb333e848bb835e7f0bbf
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/a/attr/libattr1_2.4.48-4+sign_loongarch64.deb
+    digest: 1c099ec85d9c5d12b0281658da39a1a04d36daaca6b392e5179488a10559875c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/a/audit/libaudit-common_2.8.4.16-1+dde_all.deb
+    digest: 1ed2997fce781f3d274b6d5d90b40bbb0f4da90f1157d1f959ea1398a536e21a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/a/audit/libaudit1_2.8.4.16-1+dde_loongarch64.deb
+    digest: 5559f0753fcf7abf73dd084eaefae51de73977d92a1c63d5c2bb85bcfe21c5b2
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/a/avahi/libavahi-client3_0.7.6-1+dde+sign_loongarch64.deb
+    digest: 570e493aa706d7dab457a14beb971b30e00e4f046d8a87034dc4e9f91c14040a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/a/avahi/libavahi-common-data_0.7.6-1+dde+sign_loongarch64.deb
+    digest: ab350c3d5adc06f591f8b603a98e5748cee96ddf5bf8ce6395b817b25b3dd00c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/a/avahi/libavahi-common3_0.7.6-1+dde+sign_loongarch64.deb
+    digest: 7540a1f1831d772e088f520f334dfe9cd5ff8ab44e2ba5b03599c1a4e169adb6
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/liba/libavc1394/libavc1394-0_0.5.4-5+sign_loongarch64.deb
+    digest: 1540af06f2e1aad26abb2d58ddc6c4f8d7b3a997e2d73d1b4e5df85792dca837
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/ffmpeg/libavcodec-dev_4.4.2.4-deepin4_loongarch64.deb
+    digest: d07b0385c9715566ca528d5fee98b9f494fa993a32893680202d79088b39d8c6
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/ffmpeg/libavcodec58_4.4.2.4-deepin4_loongarch64.deb
+    digest: a765a3663e3b956b573fa9cfc2beaa98359ec19c6597e08165c44194025a1cd4
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/ffmpeg/libavdevice58_4.4.2.4-deepin4_loongarch64.deb
+    digest: a92401ab8269a7a641014e9dbc29a9120d741025d0dd95bb4842f5d82e39ff22
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/ffmpeg/libavfilter7_4.4.2.4-deepin4_loongarch64.deb
+    digest: 8ed00637588dac23c5d024f87bb3b46140ec287c3800262e33c6db3a108a3e66
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/ffmpeg/libavformat-dev_4.4.2.4-deepin4_loongarch64.deb
+    digest: 460a2a0fb400366064d1a88cfc8009a92f6b26ac87fe715204418226d2d2e769
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/ffmpeg/libavformat58_4.4.2.4-deepin4_loongarch64.deb
+    digest: ae5f4e2702d0b212817a3233fc585233d8c4dd682417b449bffafe0a0072c70c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/ffmpeg/libavutil-dev_4.4.2.4-deepin4_loongarch64.deb
+    digest: 395756bfdd4872ba56393714e4909d0452e2ecd5a8d8249f31590f64118db310
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/ffmpeg/libavutil56_4.4.2.4-deepin4_loongarch64.deb
+    digest: d841de4d65433ecfbb2666936f4883cab6e67c9a7cdaddcb0990072651b6cb7b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/b/binutils/libbinutils_2.31.1.4-16.lnd.vec.25_loongarch64.deb
+    digest: 6ece0073cec7e99e23e707fed928059576a83447f43fd4566b898394a535838d
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/lapack/libblas3_3.8.0.1-2+dde_loongarch64.deb
+    digest: 86ed770a8417a2c202e4d364392fe0f7fe70d008f57d6a6d586ac1b031fcb550
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/u/util-linux/libblkid-dev_2.33.1.21-1+dde_loongarch64.deb
+    digest: 4fa0891d9d9ce9298013e591edb9da5e38d879c727e48b9778618e0ef7576744
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/u/util-linux/libblkid1_2.33.1.21-1+dde_loongarch64.deb
+    digest: c5c4cb01836e95ad6169b24f8b1625266d33792b2ed5110e0c92c28271efe5c7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libb/libbluray/libbluray2_1.1.0-1_loongarch64.deb
+    digest: db937a5b811bfaa5e13556bc87b0025624256289bc7c181b711cd82187a5393a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libb/libbs2b/libbs2b0_3.1.0+dfsg-2.2+sign_loongarch64.deb
+    digest: 5d9338475b21b814f024dc403d5886d6ce33637adf2ab1ece324ab73befbdd7e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libb/libbsd/libbsd0_0.9.1.4-1+dde+sign_loongarch64.deb
+    digest: a99ce26805f943e644e676482134ee2f975d9597b2eaa482e76d42fb111c698c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/b/bzip2/libbz2-1.0_1.0.6.2-deepin2+sign_loongarch64.deb
+    digest: 26a081b4b9312dc211dd9bf5435848d3ead8417aa3af91c298d0ec7a36411318
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/glibc/libc-dev-bin_2.28.30-deepin1_loongarch64.deb
+    digest: 703b7287cc3df85ea789c7dff04adbae85e308e311b6c482392cdb96d21c9d38
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/glibc/libc6_2.28.30-deepin1_loongarch64.deb
+    digest: e2b878849e77570e7f61cf8573f8efa09e55d5482e07a6597414c710bb263a64
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/glibc/libc6-dev_2.28.30-deepin1_loongarch64.deb
+    digest: 2369a80c994a82fbda26553fbd5ccca347dff9e60298b2af4d63722a49acb807
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libc/libcaca/libcaca0_0.99.beta19.2-deepin1+sign_loongarch64.deb
+    digest: fa08a61f991157337a4d807addd6e5e57bbd53b6891fd4e764072d4be06eb76a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/c/cairo/libcairo2_1.16.0.3-deepin1+sign_loongarch64.deb
+    digest: ed8516f9651420ac617cc0ad196efaf5ef76b251c26c81b9b8f1e7f6691c75b3
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libc/libcap-ng/libcap-ng0_0.7.9-2+sign_loongarch64.deb
+    digest: 86793b63f2b3f8280ebe7f3cabda1844e9654a743a578a1f2063b5e166d6bf53
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libc/libcap2/libcap2_2.25-2+sign_loongarch64.deb
+    digest: e4869174b8adf0459bff5378d7813e687e3af7a4d7cb30a52c5ec439a7242399
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libc/libcap2/libcap2-bin_2.25-2+sign_loongarch64.deb
+    digest: de48ad9733638b3dbb45090a36ec30cf0f28678063c1c299ec1a8ac694ed3895
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libc/libcdio-paranoia/libcdio-cdda2_10.2+0.94+2-4+d1_loongarch64.deb
+    digest: 097bf7daa27372d10be42d40d43e3351a23977174b2b8c3e44984d3f11fea84c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libc/libcdio-paranoia/libcdio-paranoia2_10.2+0.94+2-4+d1_loongarch64.deb
+    digest: 6241050132e20ec67d96e2a7794eda1781cc85c937ed3b0befb12b11ae814964
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libc/libcdio/libcdio18_2.0.0-2+sign_loongarch64.deb
+    digest: 1588a9a325599c86a8b22bcbcbe12366e6e180218159ea4aa8f84423bc2b4890
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/c/chromaprint/libchromaprint1_1.4.3.1-1+dde+sign_loongarch64.deb
+    digest: 586836a446203106baaed98ce9d8fa11f2a2ef0ad029cc9a9b9dd14145b9cda4
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/c/codec2/libcodec2-0.8.1_0.8.1-2+sign_loongarch64.deb
+    digest: b9c9ffc0a5e56fab24328ddeb1c9e254101f2a06cf166c0951fc9414353a8fd8
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/e/e2fsprogs/libcom-err2_1.44.5.4-1+dde_loongarch64.deb
+    digest: 9b26d2f7a12d3f09a29f1040a643011f68be041ac8d7e3c4568e83753182d58a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libc/libcroco/libcroco3_0.6.12.2-deepin1+sign_loongarch64.deb
+    digest: 666101367cbee6b13f2370760b2f1dbefa155b41bce1f54fc4a1a5fb548d21a8
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/c/cryptsetup/libcryptsetup12_2.3.7.6-deepin1_loongarch64.deb
+    digest: 9504c5bfc2ee15c68f5feb3d01a72c9f868c4f05e13e4b85eb8ea4f82e6e1534
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/c/cups/libcups2_2.4.2.2-deepin1_loongarch64.deb
+    digest: 07e7135e9077333cd9effdc70ae35834ea3744caf73b9bd48b63bbc7fba65a4a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/c/cups/libcups2-dev_2.4.2.2-deepin1_loongarch64.deb
+    digest: ab7c7c012ae570336c7fee7acb93764b66359cedf53b974f6958d63873bbaf05
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/c/cups/libcupsimage2_2.4.2.2-deepin1_loongarch64.deb
+    digest: 1d353db4906a7401dfc42660d60ba2f601390a585a2c8f7f66e646491580fc38
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/c/cups/libcupsimage2-dev_2.4.2.2-deepin1_loongarch64.deb
+    digest: f4eebdcefb4bf183632a63da61949b0a7a10aeac707c143447be1b36f8360893
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libd/libdatrie/libdatrie1_0.2.12-2+sign_loongarch64.deb
+    digest: 7c4d2f73efb576a980c1a02fc0f33cb80bd05704119805c05041df4f80302ed7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dav1d/libdav1d5_0.9.2-1_loongarch64.deb
+    digest: 151eb61eb5bc3157482ed102213aa57f60333fbc4b631e89569d5d01b9314059
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/davs2/libdavs2-16_1.7.1-1+dde+sign_loongarch64.deb
+    digest: dffc8b1544ee0399572838436052d23381ec0b49a39e15367322b11c3fe180ac
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/db5.3/libdb5.3_5.3.28.1-1+dde+sign_loongarch64.deb
+    digest: acc8017c31afea03c0bd9f03d51ed9d48498a71672c4ecea5419e0cf363fa742
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dbus/libdbus-1-3_1.12.20.11-deepin1_loongarch64.deb
+    digest: 4d34832ec93614190f86ea45420d349d5e9f3fe2f223bd4706b73873da26ccb4
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtdbusextended/libdbusextended-qt5-1_0.0.3-3+sign_loongarch64.deb
+    digest: a155425c05856f707a5a3b23fcabe799724280223283282330af61c369635a4b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtdbusextended/libdbusextended-qt5-dev_0.0.3-3+sign_loongarch64.deb
+    digest: 00afcc1d98d7a8ba44c3ffd0c1c908a25ab16f8bea5abb3e3689cd2ee0b1478b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libd/libdc1394-22/libdc1394-22_2.2.5-1+sign_loongarch64.deb
+    digest: c1e28f9b892bd9119f4ea0b4a7e9a7bfbec9a9c8f6480e368ac05bebf5b695ef
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dconf/libdconf1_0.30.1-2_loongarch64.deb
+    digest: cbaa1db690d7c0198efa18d1868e964c1a5540024d467d7d58dbdc7d83e9fe39
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/lvm2/libdevmapper1.02.1_1.02.155-3+d1_loongarch64.deb
+    digest: cf4b4b078d5f1d1a80ecf820d7bfc3294b63386a35092086df5dfeb8e0ab7fa1
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/double-conversion/libdouble-conversion1_3.1.0.2-1+dde_loongarch64.deb
+    digest: 3519365f512e5ca6c22dbd623c187668842c0f3d3514372d6fe17895829b27b7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dpkg/libdpkg-perl_1.19.7.19-1+dde+sign_all.deb
+    digest: 181e4b1dcd0139f9cbccfe33077af8aca8df633ba19226d3d9dc55b31b80a6d2
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libd/libdrm/libdrm-amdgpu1_2.4.109-2.2_loongarch64.deb
+    digest: 23b78b4aa65ee26475b460ca7ae352565ec305bcac622bb8bc27034c65ddb16b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libd/libdrm/libdrm-common_2.4.109-2.2_all.deb
+    digest: a2163bd06449245d398eb65e0ab9eaf9d18634f1c22ab371eb0cef82676033eb
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libd/libdrm/libdrm-dev_2.4.109-2.2_loongarch64.deb
+    digest: b2ad47d521d4d327147758e2db66c23a206ae6dbd7d8b7c6279974571f0b61f2
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libd/libdrm/libdrm-etnaviv1_2.4.109-2.2_loongarch64.deb
+    digest: c091a6016f1f07144066b93a8b34734897979788a122889fe74693af3a598bee
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libd/libdrm/libdrm-gsgpu1_2.4.109-2.2_loongarch64.deb
+    digest: 9cfbc45614434469b3dc5eff93544f2591dbcc3ff7f7a5cab94bc4df94f57b4e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libd/libdrm/libdrm-nouveau2_2.4.109-2.2_loongarch64.deb
+    digest: 9b9a9de2f5b7bde9601794a2b462a38375f0437b5a66289af2df33253180cb63
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libd/libdrm/libdrm-radeon1_2.4.109-2.2_loongarch64.deb
+    digest: 0cadd2d8a30fee8e1b737e9d9e0e6771bb947983add980f6d69bbc49a2b81343
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libd/libdrm/libdrm2_2.4.109-2.2_loongarch64.deb
+    digest: 7bccfb39d605a83ff2b1872c6c4828f1de14b8c138a509b9b6d416e671d8bfd5
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dtkcommon/libdtkcommon_5.6.8-1+sign_loongarch64.deb
+    digest: d3f7ecc0d22d3e892ea2ed66070faedbf7030625a372405b6d64f673431aac7f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dtkcommon/libdtkcommon-dev_5.6.8-1+sign_loongarch64.deb
+    digest: eb1e230c1f2d5612e3b6c659bfa52c89b602fde1f9c0d0947f63d2a3a335b988
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dtkcore/libdtkcore-dev_5.6.8.9-1_loongarch64.deb
+    digest: 7eabce7158a8a165e2d0e863bde4bf7119d9f6195c484e25be6acfe9b7f5f258
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dtkcore/libdtkcore5_5.6.8.9-1_loongarch64.deb
+    digest: c233eff1baf422f067ecb14ebabb8f0ad66fd4041691e536d962d9432ad71f7b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dtkcore/libdtkcore5-bin_5.6.8.9-1_loongarch64.deb
+    digest: 809ca291c9c19738f29fdff18d3d458d4b9af1bf2c87e5f73b9ba6e655b97463
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dtkgui/libdtkgui-dev_5.6.9.5-1_loongarch64.deb
+    digest: 000ef99ed09ebd8905ddefe0258dce5d93878c2a91240e8fafb54162bb01ee5a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dtkgui/libdtkgui5_5.6.9.5-1_loongarch64.deb
+    digest: f3db2db259a36d2bf336ab6d3c2755555be3bbab8355a3bd702d5de09714f805
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dtkwidget/libdtkwidget-dev_5.6.12.28-1_loongarch64.deb
+    digest: 336c634cb7479687368dd3b48662399b734ad21afe0135ffc3dd4fdc29cfee3e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/d/dtkwidget/libdtkwidget5_5.6.12.28-1_loongarch64.deb
+    digest: 058bc7deda6dec777ace9adc68042a0ac63f24aa74619ccbd9be5dcea2ddda70
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libd/libdvdnav/libdvdnav-dev_6.0.0-1+sign_loongarch64.deb
+    digest: 68d17cf10bf74e4fff112c9a2a802511bbf39badf4c513c5b2fd7954fd5a387b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libd/libdvdnav/libdvdnav4_6.0.0-1+sign_loongarch64.deb
+    digest: fceba0bd25a714145b9a2c289a133f9faac49df7657c2e6b540f91d2500134ab
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libd/libdvdread/libdvdread-dev_6.0.1-1+sign_loongarch64.deb
+    digest: 7f38355a1f3ec03ae6c276b5368bc52c3562d709aee8186a903d75efff96aca9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libd/libdvdread/libdvdread4_6.0.1-1+sign_loongarch64.deb
+    digest: 8ab87b99790b31b0fdba6b0b43bf0f736f4f07b3903504d6175071f32c21de2c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libe/libedit/libedit2_3.1.1-1+dde+sign_loongarch64.deb
+    digest: 04196d6eb83343557b5d2c0e02a94b1650fb001e7d1a928bdd6bdb672ed30f28
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mesa/libegl-mesa0_19.2.6.11-1_loongarch64.deb
+    digest: 620d2403298f96597a4714e2963ffb5ef87238e405e4614ab9d252e57ab3d75f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libglvnd/libegl1_1.1.0.3-deepin1_loongarch64.deb
+    digest: cefe3728e5b105eb2c071b25a912933d37f0a53ca9a99107ac7599ff69f6e6de
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mesa/libegl1-mesa-dev_19.2.6.11-1_loongarch64.deb
+    digest: 383dd7072623c36f352b71b3a830f55e3d92020b34f5c0111871817e6716247b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/e/elfutils/libelf1_0.176.4-deepin1_loongarch64.deb
+    digest: ba916f5e49492d579f98f3edac37add2dd8c1415e27a533793ddf5354c991b21
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libe/libevdev/libevdev2_1.6.0+dfsg-1+sign_loongarch64.deb
+    digest: f190bac1169678eeda7795e6b12dd68e8fb2c8ff1736eff5041c4c5ce4a5ca0e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/e/expat/libexpat1_2.2.6.5-deepin1+sign_loongarch64.deb
+    digest: 269f0e7f4d5f5658032a327b1227bc950ea15433ff60c3318568b409ffd25805
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/u/util-linux/libfdisk1_2.33.1.21-1+dde_loongarch64.deb
+    digest: 01bfa6b5d7ccdbbf9e1ce90a637558d0cdbdd729f14ceeb1c3d1ce6a8ece0ad0
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libf/libffi/libffi-dev_3.2.1.2-1+dde_loongarch64.deb
+    digest: a0f530098bab80193620e3e11ec858197041bbb272d03f16a3a9f36e60e0c4ff
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libf/libffi/libffi6_3.2.1.2-1+dde_loongarch64.deb
+    digest: 4e98ac803288f1cbb7e95730b47a33a55f83462cbba4c586ef4d0a0b063cc53a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/ffmpegthumbnailer/libffmpegthumbnailer-dev_2.1.1.3-1+dde+sign_loongarch64.deb
+    digest: 306580a0c2042bc6a498e927a64c1d717abf396a4e4065b9b8b13696cd128d3b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/ffmpegthumbnailer/libffmpegthumbnailer4v5_2.1.1.3-1+dde+sign_loongarch64.deb
+    digest: ab376a1783efe90917d9de8dc2c282d0f62cff9c2030d2d64a0a2abd5554b216
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/fftw3/libfftw3-double3_3.3.8-2_loongarch64.deb
+    digest: 11a12198e6a7fd21276498d25cd71e03111408d808e218b5aa599244762fff24
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/flac/libflac8_1.3.2.3-deepin1_loongarch64.deb
+    digest: ccd66a3cc2f928b2b65e74f59e592aa4515e7838a0886f660e4bc58ed251afe0
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/flite/libflite1_2.1-release-3+sign_loongarch64.deb
+    digest: 98b404e39007ba42d77d69b5bc111b4aa3068dcfeec06bcfc0f70ff07d08fc04
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/fontconfig/libfontconfig1_2.13.1.1-2+sign_loongarch64.deb
+    digest: 184e71b75276ca76e1bfa935022bc56bb88df4b433698f814ffe4b34784d9fd5
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/freetype/libfreetype6_2.9.1.2-1-deepin1+sign_loongarch64.deb
+    digest: 32679f976494379e2ac2c49065d2ad24a489f93fbad5dcb4fb6f500ab3f53978
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/fribidi/libfribidi0_1.0.5.3-deepin1+sign_loongarch64.deb
+    digest: 1c403efe454e7941a2230976172d37546cc475f28aac49a6ce454c24c1163ee7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mesa/libgbm1_19.2.6.11-1_loongarch64.deb
+    digest: db07d5c622bd8428bbe74d6ecfa73f5de39526122346fca3d02bac23b5ea79db
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gcc-8/libgcc1_8.3.0.13-deepin1_loongarch64.deb
+    digest: db7ac8f5f568023e4fb020ed15b9416b2eb92b596f4418379e8289f8f9a2a433
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libgcrypt20/libgcrypt20_1.8.4.4-deepin1+sign_loongarch64.deb
+    digest: 8c1461175c5714b12fabd743f2e5961a60e966f65ae4e62aff0527ebb42c6292
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gdbm/libgdbm-compat4_1.18.1-4+sign_loongarch64.deb
+    digest: 12d8968db25e63163e62c48e3f252e2963f8ca79f304f057f96e2dcf397dfb7b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gdbm/libgdbm6_1.18.1-4+sign_loongarch64.deb
+    digest: 4897de70ae81eea62f98b98bc56837c081d6a8e8bcd08cdf0dddcc07344296f9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gdk-pixbuf/libgdk-pixbuf2.0-0_2.38.1+dfsg-1+d1_loongarch64.deb
+    digest: a425c99cbe65f19fa3bccf7fbc3adc865987bf397e1a060d155850baf8afc060
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gdk-pixbuf/libgdk-pixbuf2.0-common_2.38.1+dfsg-1+d1_all.deb
+    digest: 5214c9fd450383562bc7834ccd89fd54ba88f9c32379c3226c850e6b5ee530c3
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gcc-8/libgfortran5_8.3.0.13-deepin1_loongarch64.deb
+    digest: f961b37d7d9a617e7f3147c967f4909a659870b8c3178ecd53b0835dc7b2f39a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gobject-introspection/libgirepository-1.0-1_1.58.3-2+sign_loongarch64.deb
+    digest: 014c7b425c890db4eb6402cf0babf882dc633ff25e70bbc7f570b270df5fc5cd
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libglvnd/libgl1_1.1.0.3-deepin1_loongarch64.deb
+    digest: 124e80cf598b5c76952a250829ad930f57e499812ba38a9269b404180c0bd7bc
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mesa/libgl1-mesa-dev_19.2.6.11-1_loongarch64.deb
+    digest: 84a51353d3e426e499e658a38fd7bb11a6c397b3060f4c24574bd9ba677164b5
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mesa/libgl1-mesa-dri_19.2.6.11-1_loongarch64.deb
+    digest: 2eb9faf0391bd3de948c66160285deeed21ddca9f6614755176955364046ffd1
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mesa/libglapi-mesa_19.2.6.11-1_loongarch64.deb
+    digest: 399755a8b01db8ca64d380d9f176a23d2c769f56e4efdc47041e9f74f79aab14
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libglvnd/libgles1_1.1.0.3-deepin1_loongarch64.deb
+    digest: b336a8573f02c473fba2a7621b5d78d3376c3d3056c6929a3fb52daf56d14275
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libglvnd/libgles2_1.1.0.3-deepin1_loongarch64.deb
+    digest: 1da0502d33013061f7e19a0a97a5b0ffef82246194c354135afaa7f5562ae5f9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mesa/libgles2-mesa-dev_19.2.6.11-1_loongarch64.deb
+    digest: c545ca3fbbc537f8a142c3b09080b06c7084ecec036c8a5d85a823a9cb288cf1
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/glib2.0/libglib2.0-0_2.58.3.13-deepin1_loongarch64.deb
+    digest: 9648e12e57a05ce1627a394f4ce97a965b435409d0ddf951236a21bebe410dd9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/glib2.0/libglib2.0-bin_2.58.3.13-deepin1_loongarch64.deb
+    digest: c94412b828b30da936bed8d5af8725a917029dda283b3b0be449ce5424a0cf60
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/glib2.0/libglib2.0-data_2.58.3.13-deepin1_all.deb
+    digest: bdbb96b91406aa21c1df0d5d828c3f7f440c7e710d3df3e1a68ebf90d9e0e24b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/glib2.0/libglib2.0-dev_2.58.3.13-deepin1_loongarch64.deb
+    digest: 4f1ff7d020ce46c8127aefcfb65a678b4cbb26e269f3e29b65cc7dd9e8532260
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/glib2.0/libglib2.0-dev-bin_2.58.3.13-deepin1_loongarch64.deb
+    digest: b77fccf7dc273a41eff7898921eaea439828c1f088d76223a45571f9c9db8a86
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libglu/libglu1-mesa_9.0.0.2-1+dde+sign_loongarch64.deb
+    digest: 0ec8b94735816505f41a365c370c04160be9c723b748ca8d24ac8ec0d03a9897
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libglu/libglu1-mesa-dev_9.0.0.2-1+dde+sign_loongarch64.deb
+    digest: a109390350717d858dbb81708ea39f5811e0c848840d821969d8f3c8fb766e4f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libglvnd/libglvnd-core-dev_1.1.0.3-deepin1_loongarch64.deb
+    digest: 66b0c516cee1bf0eadcd465082842feb8f993bb90ea434aab6b6baa9c80d4875
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libglvnd/libglvnd-dev_1.1.0.3-deepin1_loongarch64.deb
+    digest: be91d7d81094d5e5bf55c9b93b7ad3017cbdeff30ee2001c28a26735ea2883d7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libglvnd/libglvnd0_1.1.0.3-deepin1_loongarch64.deb
+    digest: fe5d9fd4ca0e58ddddb56a6ae6c669f16646269394d46511604ae70ca20bc2bf
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mesa/libglx-mesa0_19.2.6.11-1_loongarch64.deb
+    digest: 12128f9162eaf55626f288d910dc042e4697c62b036d40df73b4c8acb8beaff4
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libglvnd/libglx0_1.1.0.3-deepin1_loongarch64.deb
+    digest: 5e025ebd515a46fcca1f5b2be3f6d83f72e0ac2cdb4dfd742011755c35c2f898
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/game-music-emu/libgme0_0.6.2-1+sign_loongarch64.deb
+    digest: 8bc04ce5355ad83f5adb817acd72232dba00b5bd908d5b408f2b3987ec61960c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/googletest/libgmock-dev_1.8.1-3_loongarch64.deb
+    digest: 88d7361c2fb0d5e45d5d40138e1831538d702d70ce308dd050e8c57be0f7df0e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gmp/libgmp10_6.1.2.2-1+dde+sign_loongarch64.deb
+    digest: 52400da93078f9a2467653588a7ae23a0800f589deff4d5b7cb4ae5a4d44780a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gnutls28/libgnutls30_3.6.7.8-deepin1_loongarch64.deb
+    digest: 5392cd2256bf53e9ddf9988f74c2777c0be217a3cc6ad057bbc6e0d5c74a834a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gcc-8/libgomp1_8.3.0.13-deepin1_loongarch64.deb
+    digest: f8eddef88307e8b1641102b1a604b4cb21ffa00f4afc6de600fec9a491ac0f92
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libgpg-error/libgpg-error0_1.35.4-1+dde_loongarch64.deb
+    digest: f82bffa874f7707505954b382ca7699fd040951815a4683bbc0806682ced0bab
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/graphite2/libgraphite2-3_1.3.13-7+d1_loongarch64.deb
+    digest: 284079d3ee5e50645f9cd9267973e994292c2079cc3f5eb3601295db5de5a5fe
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gsettings-qt/libgsettings-qt-dev_0.2-1+sign_loongarch64.deb
+    digest: 2dc90b3134c25cd25424d70f804b3dd12e199f596c24db9768754feb084c8d4b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gsettings-qt/libgsettings-qt1_0.2-1+sign_loongarch64.deb
+    digest: 315cdfa2e36bbc41ccb11e5626cf1e1190aff93a051e233b985fe68210e141c3
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libgsm/libgsm1_1.0.18-2+d1_loongarch64.deb
+    digest: 55b52c88745cbe68aa29589a95b3187f369ab75075542cc0bd842abbdc0f2c46
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/k/krb5/libgssapi-krb5-2_1.17.6-deepin1_loongarch64.deb
+    digest: 01fd75880775f75636cd827c9d937d7d5d19eccf820eb2985da27b470d4de96c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gst-plugins-base1.0/libgstreamer-gl1.0-0_1.14.4.1-2+deb10u1+sign_loongarch64.deb
+    digest: 0d7d27da8286f7d2866e16661b867d6658ca1bab0912623d6ee57ae6004963c0
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gst-plugins-base1.0/libgstreamer-plugins-base1.0-0_1.14.4.1-2+deb10u1+sign_loongarch64.deb
+    digest: a41b3adac25a7a9274dac9d3fffc944fd8bdec90a0c255f8ffeacb2399632294
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gst-plugins-base1.0/libgstreamer-plugins-base1.0-dev_1.14.4.1-2+deb10u1+sign_loongarch64.deb
+    digest: 250b4bb68163bf6557e73217e54f601cd4f1001993539c4ecdcf52164f8787ae
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gstreamer1.0/libgstreamer1.0-0_1.14.4.2-1+dde+sign_loongarch64.deb
+    digest: a4968fff62e673799a6b0d61a7807b8eeebe93376d10e2aee40b63eb8183666d
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gstreamer1.0/libgstreamer1.0-dev_1.14.4.2-1+dde+sign_loongarch64.deb
+    digest: 840f8bedebdc51cf13108be2710d3c6f74c17ddbdd77b9161b015dc97a50ac5a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/googletest/libgtest-dev_1.8.1-3_loongarch64.deb
+    digest: 60eb3dc2f3ef18fa9ade11c64a7db89bf5c130c4f73437ddd509722bad0c685c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libgudev/libgudev-1.0-0_232.1-1+dde+sign_loongarch64.deb
+    digest: 340b710643b3b0053a648f80aa23fab5886041160a659375c54eac30add6a073
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/h/harfbuzz/libharfbuzz0b_2.3.1-1+sign_loongarch64.deb
+    digest: 9302eb33f3fc58f6d0931734f193ba564e8ae943a8809ed26178e35b32450b35
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/n/nettle/libhogweed4_3.4.1.2-1+sign_loongarch64.deb
+    digest: 4da20fc13300f27dec93b3db5bae5ce6a5cf973eac86c98b6a93230dbb28285e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libi/libice/libice6_1.0.9-2_loongarch64.deb
+    digest: 0092849bf66359624c1ec2718b17012e4e392e1cbb0b07ad594af08064fdbd56
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/i/icu/libicu63_63.1.6-deepin1_loongarch64.deb
+    digest: ffc4dcf707819691f91d159087688d8aa4ceb8c04119cbfad2ba7acb51fa6243
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libi/libidn/libidn11_1.33-2.2+sign_loongarch64.deb
+    digest: 410f8cf90dc1f0230d487b547e68b43f2b4537529dcc4c0c7006d388f245cbd9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libi/libidn2/libidn2-0_2.0.5.1-1+dde+sign_loongarch64.deb
+    digest: a08a984da966503ba0e6e397b3c53150ba8b16d435d8014ff8bbc9c1ff619722
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libi/libiec61883/libiec61883-0_1.2.0-3+sign_loongarch64.deb
+    digest: 6aedd2a63f60c25de314de410c2d3cfbd251199cc117c453dc23ff4a6c212e1c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libi/libinput/libinput-bin_1.12.6.6-deepin1_loongarch64.deb
+    digest: 7e8eb39b631e3b5830c05d3faee5547ac04a662e319a995664685a137e0d67dc
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libi/libinput/libinput10_1.12.6.6-deepin1_loongarch64.deb
+    digest: 42219ff341afb235595e1180d50158bfbba5b44d3806742f41782ff98f74ad3f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/i/iptables/libip4tc0_1.8.2.1-1+dde+sign_loongarch64.deb
+    digest: 56e70a9804c0a54fa6b19917ce9ff264f3a3c75d29f10786580f296ce65f22ab
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/j/jackd2/libjack-jackd2-0_1.9.12~dfsg.1-1+dde+sign_loongarch64.deb
+    digest: bda4b16e7a8309ea5f59ceac5951ae7d5d872752da991cc8cd9a48ac4c013d3b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/j/jbigkit/libjbig-dev_2.1.1-1+rebuild1_loongarch64.deb
+    digest: 9c758ab67ac79fdfb3160763dad63c42cfd9966b29d56db9570706ded86cf288
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/j/jbigkit/libjbig0_2.1.1-1+rebuild1_loongarch64.deb
+    digest: 69e197be939d6592b0765a3c35793d9f800918691d9c26d3ea7b8c25d857f0eb
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libj/libjpeg-turbo/libjpeg-dev_1.5.2.7-1+deb10u1+sign_all.deb
+    digest: 2be14a2abbfc2e645cbc551fdecb235c4bc6373dbfc5cac4422b89296d0679aa
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libj/libjpeg-turbo/libjpeg62-turbo_1.5.2.7-1+deb10u1+sign_loongarch64.deb
+    digest: 4e6f3b42a91df904631dc1e6a7d3aef51c3b02371f0d15ba89c47f8b8fae05f7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libj/libjpeg-turbo/libjpeg62-turbo-dev_1.5.2.7-1+deb10u1+sign_loongarch64.deb
+    digest: a4f9995ce4f3957ea88792ede83db3cb627f0bfbf62862724a5d7bba73fe1f0e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/j/json-c/libjson-c3_0.12.1+ds.1-1+dde+sign_loongarch64.deb
+    digest: 1d2a1a007cbb7607428fe5829c857c73bacc7cca0d7272d499907c30d86c2945
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/k/krb5/libk5crypto3_1.17.6-deepin1_loongarch64.deb
+    digest: 2948d18b86c909935123ae2c0814af10f92fbdfbbd1efabc23606d28d7d577b7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/k/keyutils/libkeyutils1_1.6-6.2+sign_loongarch64.deb
+    digest: 9ccb5918d7b49b157c281e73b13810ffa03fcde76ee5435748aafc3dd80b98c8
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/k/kmod/libkmod2_26-1+sign_loongarch64.deb
+    digest: 3a9cc1291ca6fe17acca992e3dd052282dbcea6316c1486165bdf028b4ecdcdf
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/k/krb5/libkrb5-3_1.17.6-deepin1_loongarch64.deb
+    digest: 3fe49ffbbfef2a1daf5a86943606e10a22f0f104d5bf6783b45248cecb591876
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/k/krb5/libkrb5support0_1.17.6-deepin1_loongarch64.deb
+    digest: ad71207cf3520aac9534216193bb6908e0ea6a03c60f5f87a400c1f0e29e7f20
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/lapack/liblapack3_3.8.0.1-2+dde_loongarch64.deb
+    digest: 2aa9fa2203430c033d4f594c099560ad5b9e2f704c9de1b3b2ea4dac14737784
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/lcms2/liblcms2-2_2.9-3+sign_loongarch64.deb
+    digest: 71a25af35f1bde76c2693a28fe63bc00bf02dff3fe8681b76d98a3e6169c2b0d
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/lilv/liblilv-0-0_0.24.2~dfsg0-2_loongarch64.deb
+    digest: 1a74684901de1d8c51f67c3bf7e62e24f507e87a8d0b3765eaaeb16406af3d24
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/llvm-toolchain-8/libllvm8_8.0.1-3~bpo10+1.lnd.12_loongarch64.deb
+    digest: 35455d89a158b381aaf3847ee55ec342282375e6f019228b858667632e5e1b2c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/lua5.2/liblua5.2-0_5.2.4.1-1+rebuild_loongarch64.deb
+    digest: 6db0dcc564db7f820ab1d322dc4995af1658b7e08cdab100b1f794283330e427
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/lz4/liblz4-1_1.9.4.2-deepin2+sign_loongarch64.deb
+    digest: a97bad85c12245878922c967bc6022da6d56666d51c51b594c7458b3935b740e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xz-utils/liblzma-dev_5.2.4.1-1+dde+sign_loongarch64.deb
+    digest: c638614a92d53c47c5d7cad1f6248520ce71166da33d6ab01bd464052d709ed8
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xz-utils/liblzma5_5.2.4.1-1+dde+sign_loongarch64.deb
+    digest: 89f272143941f84799f86d35d3834766e23801e8c6d52d636e09ed700f0b6ee9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/file/libmagic-mgc_5.35.4-deepin1+sign_loongarch64.deb
+    digest: c9ae7ccfef39b64f3b0104cf76a6571b4c44ce8586d9cd36b66437e6b4c135c1
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/file/libmagic1_5.35.4-deepin1+sign_loongarch64.deb
+    digest: 7740bd7e8f53b06483069b20765bdbea6bda569148a884cef19cfb1df80bd9f2
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libm/libmng/libmng1_1.0.10.1-1+rebuild1_loongarch64.deb
+    digest: 0613588a97a2601644c702f11dcc9a02524986980bd7c0417ac153871953d63e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/u/util-linux/libmount-dev_2.33.1.21-1+dde_loongarch64.deb
+    digest: f93cabf63a82d78bb986a1a4e6f3cb10dc7f38a524e78723346a4f54ae669ed2
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/u/util-linux/libmount1_2.33.1.21-1+dde_loongarch64.deb
+    digest: 613a55026e11a0f21e429f315c159c798875168b372acc45e8858b33554c35d5
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/lame/libmp3lame0_3.100.1-1+rebuild1_loongarch64.deb
+    digest: 894b1778513c50b0bad5be512c1e58f8a59a78daae523f6c6d707f2cbe6fd75c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mpdecimal/libmpdec2_2.4.2-2_loongarch64.deb
+    digest: 3721bd39b45f43c3f4d448cf8b0677e5727983e07d822d3fcf16cc209e707770
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mpg123/libmpg123-0_1.25.10-2+sign_loongarch64.deb
+    digest: 786dc9dcfb17e23154c3c8425e77086925d761a7f8c160613c1c942eeff1844e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtmpris/libmpris-qt5-1_0.1.0.1-2+sign_loongarch64.deb
+    digest: 14570d6f0229c84addf76c4840a93f76ec268f63ec7f8cc88b45ac68cbabb48d
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtmpris/libmpris-qt5-dev_0.1.0.1-2+sign_loongarch64.deb
+    digest: 6d3928b7335535688d25dcbaa0346add22602e4161c582037e2511258203da3b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mpv/libmpv-dev_0.34.1.6-deepin6_loongarch64.deb
+    digest: 2c6a865e2acc8d0173cea0609832184353afa09b4bbbc7375b14d0f3dd8f7070
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mpv/libmpv1_0.34.1.6-deepin6_loongarch64.deb
+    digest: 43897ff176bcecb7862ed694da3d063c48267d0dad48af74c731fc1441e55c6e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mtdev/libmtdev1_1.1.5.1-1+rebuild_loongarch64.deb
+    digest: a60fe8bf39cb2f5e3cd9c2e870fe135c190596ce8e129b65604d249bfea5f670
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libm/libmysofa/libmysofa1_1.0~dfsg0-2_loongarch64.deb
+    digest: 81210dc5af4b58c92bdb248950e0a4019e4ebd13afe8d5354979d19ea6d360b8
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/n/ncurses/libncursesw6_6.1.4-deepin1_loongarch64.deb
+    digest: 5072c79439d8953b83033d57fc754135f7ef7c7a22190f6dcb52af7fa53ebb10
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/n/nettle/libnettle6_3.4.1.2-1+sign_loongarch64.deb
+    digest: f7b2fdc01b06da3b8790b992f18a0790c73506fc2ac9536b1ed494bd5ab3d6a4
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/n/norm/libnorm1_1.5.8+dfsg2-1+sign_loongarch64.deb
+    digest: c60b25a88fcc3d50d339556754855a56be7a89e50dd867850cae252f523fce2e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libo/libogg/libogg0_1.3.2.2-1+dde+sign_loongarch64.deb
+    digest: f901c0616fb804383ce5b3278739e00500e91a6d6c16299bcad0567b059950e6
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/o/openal-soft/libopenal-data_1.19.1-1+sign_all.deb
+    digest: 74a90940d1e00c48f60fa6aa37d02f5bf613159213529c339be55efa698d0003
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/o/openal-soft/libopenal1_1.19.1-1+sign_loongarch64.deb
+    digest: 7833fda068b8eb56b80fdb3043b7afdb2cefa3514012bb61a4c6f4877ec34dc7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libg/libglvnd/libopengl0_1.1.0.3-deepin1_loongarch64.deb
+    digest: a2a493aa518dac9f4b1544a1a8ce4a9ff5dc1108bff5755a09cba9c7f69e6143
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/o/openjpeg2/libopenjp2-7_2.3.0.5-2+deb10u2+dde+sign_loongarch64.deb
+    digest: 759f585707d2ec23ba10825634c14912991c0e95c265b38d7dbb5c64b588d520
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libo/libopenmpt/libopenmpt0_0.4.3.3-1+dde+sign_loongarch64.deb
+    digest: b4e26fdfc010a6f50cbf2b4b8f729de2fcb350ab8b7042ec274bccd8067e070b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/o/opus/libopus0_1.3.1-1+dde+sign_loongarch64.deb
+    digest: 3278c7b219197ddc86932f6e1389e2333770369e76c698636df86812bc43c4aa
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/o/orc/liborc-0.4-0_0.4.28-3.1_loongarch64.deb
+    digest: 2954739a82aa4645f26064c08515cd1539a35ce31bc603782f1706bd70fa7995
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/o/orc/liborc-0.4-dev_0.4.28-3.1_loongarch64.deb
+    digest: be2d283d15dff2eba519742d900dd5a7766779ba06d1e5e009a7ee2658cfb0e0
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/o/orc/liborc-0.4-dev-bin_0.4.28-3.1_loongarch64.deb
+    digest: be504b46fc9cc9283cd938591f6fb9f2e5a6b381ef25adc484e2794ab4379aaf
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/p11-kit/libp11-kit0_0.23.15.3-1+dde_loongarch64.deb
+    digest: 72e1f53bc00db7c0d1346a7f9cd8fe7b99720dd29312a416b3e6b181b43ff572
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pam/libpam-modules_1.3.2.2-1+dde_loongarch64.deb
+    digest: 322093f67c81d79309038ae01708e331f5330ea508c42888fbbfa3818baf7db2
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pam/libpam-modules-bin_1.3.2.2-1+dde_loongarch64.deb
+    digest: ad7f837ced36a613e70bd2d3254ed8db2bc4f8cb8853fc7b87c7d5aa974f9247
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pam/libpam-runtime_1.3.2.2-1+dde_all.deb
+    digest: 0f073faf7db8b126cf2e067e6862a1fbefe8b3b9bc9a72d17760ebce53e76493
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/systemd/libpam-systemd_241.61-deepin1_loongarch64.deb
+    digest: 79b980ff95baf0bece15f440322a16fb29e80d789452d42b0de25a93bac83a7a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pam/libpam0g_1.3.2.2-1+dde_loongarch64.deb
+    digest: 6dcec07d6df4b1e46459ab09a967223f7a0ea1ba557df8ce6bd5047852d07025
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pango1.0/libpango-1.0-0_1.42.4-8~deb10u1_loongarch64.deb
+    digest: 81c240c9d4c7c7e781d55a7396c52f37cb57e408856085e63c2d9dcb0b5678ac
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pango1.0/libpangocairo-1.0-0_1.42.4-8~deb10u1_loongarch64.deb
+    digest: 570d5a76936c3a62c683ab9210c95a0c0f18e1ed4568d64a0a5189c95aa0e8b3
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pango1.0/libpangoft2-1.0-0_1.42.4-8~deb10u1_loongarch64.deb
+    digest: 7cd9e3213cf502791ee1cb650531b1e19004d95ea3a97ef7681db45f1824574c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libp/libpciaccess/libpciaccess-dev_0.14-1_loongarch64.deb
+    digest: a7631699af29d6ce12b545c05aab8aa0f1b1be545dfd0d27d6e2c6482d40bf06
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libp/libpciaccess/libpciaccess0_0.14-1_loongarch64.deb
+    digest: 0a1156120f858d8627216e42f593650982aa74062c44d876d61ff0625633b367
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pcre3/libpcre16-3_8.39.2-12+dde2_loongarch64.deb
+    digest: da5d39362d89c09b349d0a5bd5f064e146ff6d9ebe02396f4c11941bd0c582f7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pcre2/libpcre2-16-0_10.32.2-deepin1_loongarch64.deb
+    digest: f3d60ffe174d0f5df21e644664305238afcb153d6b4672e24b5788f3e2c59643
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pcre3/libpcre3_8.39.2-12+dde2_loongarch64.deb
+    digest: 1a1e0b48125844f3f057e2f7a726834063944c273eceb5daec4601296af2e36e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pcre3/libpcre3-dev_8.39.2-12+dde2_loongarch64.deb
+    digest: f077f92dc8dc5ee3d469e4d3457f2ebdc4a92e8e0b63fdae32210254cf0575ce
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pcre3/libpcre32-3_8.39.2-12+dde2_loongarch64.deb
+    digest: 35fe6915010277d0eb2a6f634c6ca907c7bee0d21001debf49fc9f1235312779
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pcre3/libpcrecpp0v5_8.39.2-12+dde2_loongarch64.deb
+    digest: 9e2b4132bd6629aa230326ec0958425e98feb35172effaa766229502a9be9bad
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/perl/libperl5.28_5.28.1.2-6+deb10u1_loongarch64.deb
+    digest: cc66055e663e68fcf8426b7d7010f7206be386e080647d9bf85e31ad2ad4e216
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libp/libpgm/libpgm-5.2-0_5.2.122~dfsg-3_loongarch64.deb
+    digest: af2c477f4ef35c5a94946fb6a8c98da1c341ce61444848f1ec2a908ad8219da4
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pixman/libpixman-1-0_0.36.0.2-deepin1_loongarch64.deb
+    digest: ea3ab7453b242acded79db7d8cdc08a9922485da73694a75e5a3d65e444c0e98
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libp/libpng1.6/libpng-dev_1.6.36.2-2+dde_loongarch64.deb
+    digest: 161c1ba45f384c61395f47d66e1ef48196b335b9d95d0603534c704f65d900d6
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libp/libpng1.6/libpng16-16_1.6.36.2-2+dde_loongarch64.deb
+    digest: 8fee0b09f279da1a9a586291c36087f55a2c324483b93f96b23b0d1bc52919a4
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pocketsphinx/libpocketsphinx3_0.8+5prealpha+1-14_loongarch64.deb
+    digest: 599d2f34f97f8eddbb5264424aff400c9876191199fbaeb2fdd35de691271dac
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/ffmpeg/libpostproc55_4.4.2.4-deepin4_loongarch64.deb
+    digest: 76fd36f2b7ebbfc9b670d5c6a088d1825a258b49df844ed5a270ff27358fec14
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libp/libpthread-stubs/libpthread-stubs0-dev_0.4-1_loongarch64.deb
+    digest: fed209f787084895259652e5cd718f35b29842c1a6bbc0e59876f980db335083
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pulseaudio/libpulse-dev_12.2.83-deepin1_loongarch64.deb
+    digest: b2d6870df5d13b70a72098b6e2f03ed0a30c6660f88e45d25800e31f1b3da3a9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pulseaudio/libpulse-mainloop-glib0_12.2.83-deepin1_loongarch64.deb
+    digest: 2f0eaf46e71ac528db3338cfd616e31fed0dfa1dd1a026ca0fb1825d2ea0c2b7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pulseaudio/libpulse0_12.2.83-deepin1_loongarch64.deb
+    digest: bb4e48a39d1bf4d2abd51c451d3ef406ede13c09400f9efdd651594247c5e22f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python-defaults/libpython-stdlib_2.7.16-1_loongarch64.deb
+    digest: 9b6ece2176b093d12ccc96bef47ffd833b459dad01f1f9201c387582b0beacf8
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python-defaults/libpython2-stdlib_2.7.16-1_loongarch64.deb
+    digest: 4075725728951728c28c4401e85ea2ef0727a242d4b27b806989b7ee40c7bc00
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python2.7/libpython2.7-minimal_2.7.16.12-deepin1_loongarch64.deb
+    digest: 789758757b02f38639713ac2b22cca8c8e33a8f27db54de5c90e87a872396e3e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python2.7/libpython2.7-stdlib_2.7.16.12-deepin1_loongarch64.deb
+    digest: 21e47a450761943fcac740828d4122a5afa3a0e579aeaa57b307a6901bb3c68c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python3-defaults/libpython3-stdlib_3.7.3-1_loongarch64.deb
+    digest: be05f7727d7652aac33893a33d9013f7a9dc84af42c1f38f73083b50ba0eeb57
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python3.7/libpython3.7-minimal_3.7.3.17-1+dde_loongarch64.deb
+    digest: 577821359facd63e79b77dd0c5da0c9604e5dba621793d4b86b5af68b4b84c8c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python3.7/libpython3.7-stdlib_3.7.3.17-1+dde_loongarch64.deb
+    digest: a8cb08ce25181f30b438a335b771c724e3087ab8f56c20a5d57203946c6bda3d
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/libqt5concurrent5_5.11.3.64-1+dde_loongarch64.deb
+    digest: f86e8eaeff1febd10e94f4ec0acf4d51d340dff4bbac6f599203894c499170af
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/libqt5core5a_5.11.3.64-1+dde_loongarch64.deb
+    digest: 7a26b78ce757dba54054c1d6793cb3f9ddecc8906427d4c0bb8eb5ffbb6e47f1
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/libqt5dbus5_5.11.3.64-1+dde_loongarch64.deb
+    digest: ec37ff04de336eedc3309547ef6b7c0ee55110efcc26b1755358ac0dde6fdf2e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/libqt5gui5_5.11.3.64-1+dde_loongarch64.deb
+    digest: 22d9ff13c93cc4c9318bc9da001cdb2ef92c7ddf04fff0eb0b488893bfbc5d4a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/libqt5network5_5.11.3.64-1+dde_loongarch64.deb
+    digest: daaf9c33b3e49a5046ba44b341ac1609622f519c8001e62198a1a6f21ce69472
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/libqt5printsupport5_5.11.3.64-1+dde_loongarch64.deb
+    digest: 44f22754df9b60f89db611a1759797c150b757d3aa05c124c05d34b6a7909526
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtdeclarative-opensource-src/libqt5qml5_5.11.3.2-1_loongarch64.deb
+    digest: 1a36999277e410100745006cf3b5bac7b99766e67ac01c1b49cd5f10fc3a97b2
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/libqt5sql5_5.11.3.64-1+dde_loongarch64.deb
+    digest: 166939a9ceb95f9ba5bcb41342e234261c801b3bec1d9ff5f1fa0d5628e25868
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/libqt5sql5-sqlite_5.11.3.64-1+dde_loongarch64.deb
+    digest: b79af71438c76db6f0db42049848e6be189f0a21b568ecd75d5e3958d02dcf02
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtsvg-opensource-src/libqt5svg5_5.11.3.2-1+dde_loongarch64.deb
+    digest: c54f7bc1f720a5734b13da807260961d3bcb0e95806362b0b5f6d3f3dbe050ce
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtsvg-opensource-src/libqt5svg5-dev_5.11.3.2-1+dde_loongarch64.deb
+    digest: 4d66b4905666fb484c24843ed48997f52a92bb449766de51a784ab2ded76040c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/libqt5test5_5.11.3.64-1+dde_loongarch64.deb
+    digest: f34476bcbf9b733d394779cd174feb89d91215d3d151c5c04c083b7b0f5c4c45
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/libqt5widgets5_5.11.3.64-1+dde_loongarch64.deb
+    digest: fc57736d80e048fb87eeece3a715aafcc8fdafff611b2524606fa76aec542df9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtx11extras-opensource-src/libqt5x11extras5_5.11.3-2_loongarch64.deb
+    digest: cc078ba65cf3a65d9abeb4517bd8c6cd3e8466fcdc63022276e10c0b3fbe2581
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtx11extras-opensource-src/libqt5x11extras5-dev_5.11.3-2_loongarch64.deb
+    digest: 192d287d0e092e6e185c4b9e4df288d17c3684ae139120b7007d781f7006049a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libq/libqtxdg/libqt5xdgiconloader3_3.3.1.3-1+deepin_loongarch64.deb
+    digest: 995dc61431d385174fd30bccffe5c2a084d5e38a0459070233032e73be7e4e13
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/libqt5xml5_5.11.3.64-1+dde_loongarch64.deb
+    digest: 128fe109dde8a754c6cfb1813abb6e167eebdc19e7d9abb99dc4ba9383f85188
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libr/librabbitmq/librabbitmq4_0.9.0-0.2_loongarch64.deb
+    digest: aa4facbb66bcc5d776f3a8ee96b5d0c1d22373796e348c7fb44cf9c6d9e25a23
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libr/libraw1394/libraw1394-11_2.1.2.1-1+rebuild_loongarch64.deb
+    digest: 85d84daa58f7dd4c12bb9fa71f2fd416adc29834ed9686efee4ec266edd70098
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/r/readline/libreadline7_7.0-5+sign_loongarch64.deb
+    digest: b032f476f7ff05aba6f7cdde6d7e28bb8333e082befff2f5ac0d30de94422897
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libr/librsvg/librsvg2-2_2.44.10.5-1+deepin+sign_loongarch64.deb
+    digest: d801b5d52e98e445d14f16fcc4c16b4d5b2f40593237eac939688da3ef50498b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/r/rubberband/librubberband2_1.8.1-7_loongarch64.deb
+    digest: 280199568b22ce84fcf22b9b1adadc68a262058a93d59b4c6fd33641c2617bba
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libs/libsamplerate/libsamplerate0_0.1.9.1-1+deepin_loongarch64.deb
+    digest: a63232fd5f57d0e35444f79f2af50f249e93ac4e8851d4faabce824896865e36
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libs/libsdl2/libsdl2-2.0-0_2.0.9.6-1+deepin1_loongarch64.deb
+    digest: 46d562788e3a103bd49558af4b08662459861914810906b5784807a537f6546f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libs/libselinux/libselinux1_2.8.1.12-1+dde_loongarch64.deb
+    digest: 6e493dfe04a21d0e27f7b9bf09e5e3a2bd70be9b279a5c7d0f74fce4e12d8483
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libs/libselinux/libselinux1-dev_2.8.1.12-1+dde_loongarch64.deb
+    digest: 0f55da65514e53ca3e654020f40a4054bd1592fe57c48fed9b688b9976b98354
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libs/libsemanage/libsemanage-common_2.8.6-1+dde+sign_all.deb
+    digest: 8558fa6a55d9812ab01e767ced026e994bcc4853fc2bad1b414d3f0b31d1dea9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libs/libsemanage/libsemanage1_2.8.6-1+dde+sign_loongarch64.deb
+    digest: 476f93a2f12743a53299e216c6c8d36804ad61bcfc3b3ce80ffa17e71af3b9be
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/lm-sensors/libsensors-config_3.5.0-3+sign_all.deb
+    digest: 6e7fcdb4246913fb4f275590d60502005e939cc13f27f91ba16f44eaec62c091
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/lm-sensors/libsensors5_3.5.0-3+sign_loongarch64.deb
+    digest: b7c08a460a0f07afa7204890dc4a02813ad2341bb7fc73c92de167bafbc50fd9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libs/libsepol/libsepol1_2.8-1_loongarch64.deb
+    digest: 1c4446450558af77b10898fb9f82a80ee55676250e14dcbd986bf97d94ec1ca2
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libs/libsepol/libsepol1-dev_2.8-1_loongarch64.deb
+    digest: b5f9da37eb717863feb247288ba1ae5e15526e0275ea37919227d66fa26703bc
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/serd/libserd-0-0_0.28.0~dfsg0-1_loongarch64.deb
+    digest: 7e9b283ce235a97d91d62464e92805af7ca6bd1001239b9d2a08b595ceb77861
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libs/libset-scalar-perl/libset-scalar-perl_1.29-2_all.deb
+    digest: f03921597bd20cbbf47ee60cff3fac48fe2d4790b110f2d426a65fbc8ef45578
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/shine/libshine3_3.1.1-2_loongarch64.deb
+    digest: 9344d2faa583ee7e9bed703591c8d67262531726d75637ebc0900affb22da988
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/slang2/libslang2_2.3.2-2_loongarch64.deb
+    digest: 4ffdf44e9d74e531ced7291fe8cab841085e6f06742ba2e238296c090acd4abc
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libs/libsm/libsm6_1.2.3-1_loongarch64.deb
+    digest: 92e0a28434d70939a0cbf50ac7564054bceb7d4178fb67c5a7428f2d55552cc8
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/u/util-linux/libsmartcols1_2.33.1.21-1+dde_loongarch64.deb
+    digest: 22b34e53e0a5b3d3131c00ea191d233e0551b58d992c10863ca30ab33be72627
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/snappy/libsnappy1v5_1.1.7-1_loongarch64.deb
+    digest: f53169f73d47815c5a512ba056c645868f3d35386251e16458d9c3176b0071e7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libs/libsndfile/libsndfile1_1.0.28.3-1+deepin_loongarch64.deb
+    digest: 30a8a8e980d3b4ca9d3f3b4e91d8c34c4c0275f54e67d04889069faa1a522d43
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/sndio/libsndio7.0_1.5.0-3_loongarch64.deb
+    digest: 8755bb62987796879c80a3cecc0bbbe92165c35740dafc76cd6b2af38ff2d701
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libs/libsodium/libsodium23_1.0.17-1_loongarch64.deb
+    digest: 41fd44bf20ea28cf6428952b73f074d6632793ef0b38081fe03d06d3c2957e92
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/sord/libsord-0-0_0.16.0.1-1+rebuild_loongarch64.deb
+    digest: 6efe5e315eae5ededcb9a9423c9ea49b5d8d2321fb335eebf3ddf9e39aa873da
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libs/libsoxr/libsoxr0_0.1.2-3_loongarch64.deb
+    digest: a49c0c7e17a36080078a38be4d27de8c76d2dcb8869d643cb7677f97a90e3da1
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/speex/libspeex1_1.2.1.1-1+dde_loongarch64.deb
+    digest: 80d5316a4f958b950c042d7408b4099ec8c4a01f9b615cdb7496172f451755cb
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/sphinxbase/libsphinxbase3_0.8+5prealpha+1-13_loongarch64.deb
+    digest: 565612cfd4631898569345a8499a8c8fedfcf92abbfd340ff41b544286eb57c5
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/sqlite3/libsqlite3-0_3.39.3-1_loongarch64.deb
+    digest: 6ba1bb3dbe56dbbe20d690bbce99c00e0e91c3282bf8eae3b7c5299560ff3137
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/sratom/libsratom-0-0_0.6.0~dfsg0-1_loongarch64.deb
+    digest: 98e028c1d05509eae9517d8dc971abb96ecb9a96dfb51ffe857d1422e0e33e3b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/srt/libsrt1.4-gnutls_1.4.2-2_loongarch64.deb
+    digest: 8a908a8bdfe477329de2bfc343bee69a85a500f5f435c2e73c2608f992e9d41a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libs/libssh/libssh-gcrypt-4_0.8.7.4-deepin1_loongarch64.deb
+    digest: 848cc921c144dac4baf2b3a243eda4802232a54a1dee92e2082102cd80f14423
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/o/openssl/libssl1.1_1.1.1d.22-deepin1_loongarch64.deb
+    digest: 59ba6a34e1ea7ccd58cc31944b6e50d962e3f9c5239014e1ea3bf71784ae3797
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/startup-notification/libstartup-notification0_0.12-6_loongarch64.deb
+    digest: c28d81753856b18cd19f342995c90dec7417ea9b4dd0de59937a29cecbc104b3
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/g/gcc-8/libstdc++6_8.3.0.13-deepin1_loongarch64.deb
+    digest: b5c09f909af950f0a9882a71b678c8831f3b47b57459258659ba12e5afc9b118
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/ffmpeg/libswresample-dev_4.4.2.4-deepin4_loongarch64.deb
+    digest: a1609a60081d4b3e228b87e1719ace7b45b39d981803860738e28b5b6339d91c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/ffmpeg/libswresample3_4.4.2.4-deepin4_loongarch64.deb
+    digest: e1171a9991de810bd8b828c2d7a6e4e058e0235746577f52688043eec0867f30
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/f/ffmpeg/libswscale5_4.4.2.4-deepin4_loongarch64.deb
+    digest: 1d42caf44ab8bf66e8f24845b62a680398f132f8ab1dab6e8ed9ad5ca79847d7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/systemd/libsystemd0_241.61-deepin1_loongarch64.deb
+    digest: 140ad4be00d145d8eae1ccbceba203da22c40e157ec4cd2d4d0eb00e181df751
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libt/libtasn1-6/libtasn1-6_4.13.1-deepin1_loongarch64.deb
+    digest: b03404caa5d1d46b7a20b0124ef27bf05da08323dd40ccbb7081fdd6b0794891
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libt/libthai/libthai-data_0.1.28-2_all.deb
+    digest: 267d6b251f77c17fb1415ac0727675cb978c895cc1c77d7540e7133125614366
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libt/libthai/libthai0_0.1.28-2_loongarch64.deb
+    digest: 05318ef4844b8d9d77c3e622b5237461b5205b927eda7c51a7594bebca042165
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libt/libtheora/libtheora0_1.1.1+dfsg.1-15+d1_loongarch64.deb
+    digest: d5499761250a8b40c858ac52aaa69dd44badf0327225571c8a6b34b7ab5029b9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/t/tiff/libtiff-dev_4.1.0.8-1+deepin_loongarch64.deb
+    digest: b687bbd57df93e5c38872caaf15c1ef3aa54d5eb0010464ad1a6caf909425823
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/t/tiff/libtiff5_4.1.0.8-1+deepin_loongarch64.deb
+    digest: d761d4c848f9be152e449e465661bc32b4f70c6837e95e968fb0e436e7b98180
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/t/tiff/libtiffxx5_4.1.0.8-1+deepin_loongarch64.deb
+    digest: d1aa131f615d58b8e0533689073aaba415c2ca6bb62b0559e5750e0f0bff6322
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/n/ncurses/libtinfo6_6.1.4-deepin1_loongarch64.deb
+    digest: 288e654d784ce8d531b3981db881472b5d4b85e815fab3765667e02da9f5f991
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/t/twolame/libtwolame0_0.3.13-4_loongarch64.deb
+    digest: a040340e08b4e7a67b1dabc0e578cd61d94c5bcf5fabdf3a924b6fb8f44dbda1
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/u/uchardet/libuchardet0_0.0.6-3_loongarch64.deb
+    digest: 0234257bd575546c92ddb8a67c3e0b4b87f38c591479ceae0e0e40197ffcdd7e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/systemd/libudev1_241.61-deepin1_loongarch64.deb
+    digest: 97db58ea4075c8c5c3071f191d1845026068dfb18116dd1801bcf799280f4d64
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libu/libunistring/libunistring2_0.9.10-1+d1_loongarch64.deb
+    digest: 841f055afe3e0d3f810c93d6c18ee7113ba6015dbbc3968d22b9a9e2a56f69c0
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libu/libusb-1.0/libusb-1.0-0_1.0.22-2_loongarch64.deb
+    digest: 1c7b2b049b3f325a32b54982facda486fe54fe1dbc6ff4e6ed5b65977b8608f5
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/u/util-linux/libuuid1_2.33.1.21-1+dde_loongarch64.deb
+    digest: 5e3a5c808b8a5ea6af3ed0244bd77b13463a04a1e7d3aa65faf28c6b3f751106
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libv/libva/libva-dev_2.14.0-1_loongarch64.deb
+    digest: 5496a0117ef686d2216d554d9ae604428b6186d463f700de547b48a47e6b55d0
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libv/libva/libva-drm2_2.14.0-1_loongarch64.deb
+    digest: e0a266b20061fac466f2cc941cc609b673d539dc90ec3208c51ff9c60875f4b3
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libv/libva/libva-glx2_2.14.0-1_loongarch64.deb
+    digest: 2b11435d40b461d1e363d9e0deabf0559bd3fc75574110fd60e1c6fe1c691dc3
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libv/libva/libva-wayland2_2.14.0-1_loongarch64.deb
+    digest: dd30b5eac9cf1c6680f8a25e156fb98ae2b9ba42cb000693f43031d1d6c948cf
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libv/libva/libva-x11-2_2.14.0-1_loongarch64.deb
+    digest: fabfdb3c72e67a133898113ad9d96ed96aafb25e766787a36b21eaf1f7bb92a5
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libv/libva/libva2_2.14.0-1_loongarch64.deb
+    digest: a8cf97f6379a49a501ddfb94dd9fbd889c57b0d6f499f4754b0805ae504d0dfa
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libv/libvdpau/libvdpau1_1.1.1-10+d1_loongarch64.deb
+    digest: e7e57ca618e97d001ac98dbe8e881a6fa2d6275001d6d2ca77ca6ce8c2be1162
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libv/libvidstab/libvidstab1.1_1.1.0-2_loongarch64.deb
+    digest: ee5865519c7acf76056608b2a3c07611be8edb1233e960dd5030cfe5e76bc937
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libv/libvorbis/libvorbis0a_1.3.6-2_loongarch64.deb
+    digest: 0452a87bcaf6fe6507f244c08995832b44411abaabacd37aec1303b927d8b8e8
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libv/libvorbis/libvorbisenc2_1.3.6-2_loongarch64.deb
+    digest: 3c6c86fe56abe8f0a11dd9e8f7b439a4a1deb4cd5128fb1ab54c7bbb7fa45d4c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libv/libvorbis/libvorbisfile3_1.3.6-2_loongarch64.deb
+    digest: 6a6e121c85b974885c0c97f1acb2990b517c6396263d4d0194ef114d0c362a7e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libv/libvpx/libvpx5_1.7.0.3-deepin1_loongarch64.deb
+    digest: 5f639710bdb35241474e5403789d15c72e28e9dde4a02c32da805cfd18a39844
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/v/vulkan-loader/libvulkan-dev_1.1.97-2_loongarch64.deb
+    digest: 91bdb614d39d5a4a2e08a08575f8816fcdc31da1af7954ca0063864a9d3d9f3d
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/v/vulkan-loader/libvulkan1_1.1.97-2_loongarch64.deb
+    digest: 981ec31e7b6f0b4f649ecc8c6f0d4680918a666bccac72095aecb075bc1a4d36
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libw/libwacom/libwacom-common_0.32-1_all.deb
+    digest: 654f6d07188516ec4c566bccca0b65aca9f8b95b32e4338e66847237e2266fa6
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libw/libwacom/libwacom2_0.32-1_loongarch64.deb
+    digest: 4c123439bffb3478c2b3c8bfbcddc82d97aafb8f04029bde649ab70514d201bf
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/w/wayland/libwayland-bin_1.21.0.4-1_loongarch64.deb
+    digest: 9a3d519cc6bebcaace3e1406fd9dc37764b8041534b99e426034685f37c558fe
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/w/wayland/libwayland-client0_1.21.0.4-1_loongarch64.deb
+    digest: d034140061317df35877dadccc209892600d3ebf6fd9b0db2083a00b1c99ca4a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/w/wayland/libwayland-cursor0_1.21.0.4-1_loongarch64.deb
+    digest: b97b7557db23d71485175004d8e6dd3fdb58de50e1f1eed5c07b5828d2e7a24c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/w/wayland/libwayland-dev_1.21.0.4-1_loongarch64.deb
+    digest: 76f08c6954bd0b23d0a809501750d0c521e336a144793f7bec0554192d7f2441
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/w/wayland/libwayland-egl1_1.21.0.4-1_loongarch64.deb
+    digest: 2172fd59fe820de0f4acd91799904c97ff285e7085edc9b5062e17338813b76e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/w/wayland/libwayland-server0_1.21.0.4-1_loongarch64.deb
+    digest: 0237fc7cadd492b905b9abea542c45bb67c88caacc93663cad4f22a3731143e0
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libw/libwebp/libwebp6_0.6.1.5-deepin1_loongarch64.deb
+    digest: 6e20c02d6c3795b0a8c5f0ec83fcbcbf875be9a13647747955a5b4d34123e321
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libw/libwebp/libwebpdemux2_0.6.1.5-deepin1_loongarch64.deb
+    digest: 1b884d0215114f4e655e2718bafe54cd313902a1fd15b8bcc5ad110aea58fbc4
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libw/libwebp/libwebpmux3_0.6.1.5-deepin1_loongarch64.deb
+    digest: 5e56097faaf6dccc3d1e6f9dc8edaacf2bebb3bbd017791646571e52ae547713
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/t/tcp-wrappers/libwrap0_7.6.q-28_loongarch64.deb
+    digest: 67b6dbf93da087f5667215c8e09f0240c179662248670dd27f6b2430beb300b5
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libx11/libx11-6_1.6.12.6-deepin1_loongarch64.deb
+    digest: 2c86160c4a986dc4dbd077be350c729318ec699956dddd1414f714b9d8a5ec2d
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libx11/libx11-data_1.6.12.6-deepin1_all.deb
+    digest: f7cc9933ed2788aec4a0521780333b6672124fb91307e0dc572cfc37d4143f9f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libx11/libx11-dev_1.6.12.6-deepin1_loongarch64.deb
+    digest: 4fa3e37083fa2de4bce8f1368b8a20f1f72beadcbf46b309f7df4dcb215dc508
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libx11/libx11-xcb-dev_1.6.12.6-deepin1_loongarch64.deb
+    digest: 6a2411b7868f87a5b7ba6363ccb890f55f54089247f06bca733037578ed7371e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libx11/libx11-xcb1_1.6.12.6-deepin1_loongarch64.deb
+    digest: 211ef8727ac65bd04abc19b3130f5ec354e6fed1ea428db841d5ec4ff2b27b4f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/x264/libx264-155_0.155.2917.5-deepin5_loongarch64.deb
+    digest: d644c50b32ecfe92023652881351d379aca34e390d999b421a480c5d63cef6f2
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/x265/libx265-165_2.9-4_loongarch64.deb
+    digest: 6c2ea6abb7e9dff4d064ba9de6d391508ba82ee6a7fe827b2921fdd71bc41c57
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxau/libxau-dev_1.0.8.1-1+rebuild_loongarch64.deb
+    digest: 25b0204542e28ace07090fa0cefb1d2c1c82389b73f0bdf877f8c3304779550b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxau/libxau6_1.0.8.1-1+rebuild_loongarch64.deb
+    digest: e9f2e535287060ea044b763eaaa9e8e2a53c55f428f0d96dd01bbd11207d382f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xavs2/libxavs2-13_1.4.1-1+dde_loongarch64.deb
+    digest: eb1174950a05a4b0cc003abf9bad028f7d3a4a20e8ae23647f1880c1784cc9fe
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-dri2-0_1.13.1-2+sign_loongarch64.deb
+    digest: 764580b16433ac6167f38192eae9c8c5a25f27d9d319f89400708d9a00aa9ce5
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-dri2-0-dev_1.13.1-2+sign_loongarch64.deb
+    digest: f76f6aca0a36f6c8459d31f043d40135ef464da9ab50a8d72de8bb201d800137
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-dri3-0_1.13.1-2+sign_loongarch64.deb
+    digest: 2fc2c83efdcdcf9e4550b20d1a54379bae51d16b10bbe8c045ed25b0d77a8215
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-dri3-dev_1.13.1-2+sign_loongarch64.deb
+    digest: 990501c3fbb2759cfaaec11ae96389359f8584c2e13bcb918cd9fa43d2220e25
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xcb-util-wm/libxcb-ewmh-dev_0.4.1-1.1_loongarch64.deb
+    digest: ba0f8573ca1c8a7a6e183ccd0ba280b2f66d48d928ff16b9a3c9f3eace0eb769
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xcb-util-wm/libxcb-ewmh2_0.4.1-1.1_loongarch64.deb
+    digest: 6c1304744743f31d8a8378550ac757b687179e33a4d3307eb40ee6890f188fbf
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-glx0_1.13.1-2+sign_loongarch64.deb
+    digest: 412c6506478b9d7ca6d015cf819f50cf39775dfabd1d8497ddc0255d05e39d09
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-glx0-dev_1.13.1-2+sign_loongarch64.deb
+    digest: 7ca5c06f10c7082ddbc84dd443884971886607ffd219cda891e2ca2b26aecca8
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xcb-util-wm/libxcb-icccm4_0.4.1-1.1_loongarch64.deb
+    digest: 2f677f7fad48d63484253621c7012a6e922898f5c877d7818d687b55dd8a031f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xcb-util-image/libxcb-image0_0.4.0.1-1+rebuild_loongarch64.deb
+    digest: 6b7cd3b3f8fc58e17bf430624dd6f8759749b74e73141b9b86815c31430c6fc7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xcb-util-keysyms/libxcb-keysyms1_0.4.0.1-1+rebuild_loongarch64.deb
+    digest: 4745322bde0d1a06b46cf4131eac12ddaeed6f4e21342a2811482a9683b9c7b5
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-present-dev_1.13.1-2+sign_loongarch64.deb
+    digest: e64b1dd3fbb2417ee2d0172ebda539f0797fb640036049b131da8b5a110316d7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-present0_1.13.1-2+sign_loongarch64.deb
+    digest: d79a937577a839ef99386d72986430084b51effd74815db99633469af7c313c8
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-randr0_1.13.1-2+sign_loongarch64.deb
+    digest: 46fd6e7818e81c0fac52a9a5f93973c82f19e4ca3f56322b968c715dfe085e94
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-randr0-dev_1.13.1-2+sign_loongarch64.deb
+    digest: b6cf5437f50c4c15a477abc6342326e292bbdd88cfd5ee989cf69032a3558011
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xcb-util-renderutil/libxcb-render-util0_0.3.9.1-1+rebuild_loongarch64.deb
+    digest: c04a6d750cd95dc997d8ce34cba71840c4536e36841622504533a94b946c5b90
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-render0_1.13.1-2+sign_loongarch64.deb
+    digest: b5df6f32dc644d8c735a2d2a60c523c8e845601ceac6b2bf5b1639bea9644851
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-render0-dev_1.13.1-2+sign_loongarch64.deb
+    digest: 6ec51598705ce252e8fafa2da3ef27d697e9d87a3f34bd9287c974a744e57a83
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-shape0_1.13.1-2+sign_loongarch64.deb
+    digest: 335420582ad203c1d6115ce0b1b2338928469283e8e19015efe5369ab8be630a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-shape0-dev_1.13.1-2+sign_loongarch64.deb
+    digest: 8d71a96634460c6f5d15ef409d0a16bc81e24f362512a812251b08cb7754235b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-shm0_1.13.1-2+sign_loongarch64.deb
+    digest: 509ea16b247139b130dffbcf802593bcd70f580cd574ac1701827573279c922f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-sync-dev_1.13.1-2+sign_loongarch64.deb
+    digest: 513a1d0c8a1f7c8138dbe1e628a6fb6b54f1950cced1685bf324a20561de9f9a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-sync1_1.13.1-2+sign_loongarch64.deb
+    digest: 2757f246281047c1adff934427123fb6c1277fbe13251c4bb09dddd559681f23
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xcb-util/libxcb-util-dev_0.4.0-1_loongarch64.deb
+    digest: 57cc51294c6a62baa80b0e9453c12905bb9b87ac70fd350fb271ed290c3b3999
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xcb-util/libxcb-util0-dev_0.4.0-1_loongarch64.deb
+    digest: beff20208851706d293c5d3dc399e18f8be9a9be6ec908dd42e43ce74dce4478
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xcb-util/libxcb-util1_0.4.0-1_loongarch64.deb
+    digest: abed26a0a63ab14f044357d30208af694d2f73544aeaeb10eb51c81cb3eb1edd
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-xfixes0_1.13.1-2+sign_loongarch64.deb
+    digest: fdf36bfe1271772ee7e060af4c91312f0c28eca6e6dbc801eeee5c604d8cc4eb
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-xfixes0-dev_1.13.1-2+sign_loongarch64.deb
+    digest: 17d0ce3a88007d3895ade8d040f931a29b65708c45089a5aece813b699beb183
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-xinerama0_1.13.1-2+sign_loongarch64.deb
+    digest: 64aeb3ce83d3d75f816e65507bfa2ca3bbdf0a135e3d2c2b7e01fd84f1d41df1
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb-xkb1_1.13.1-2+sign_loongarch64.deb
+    digest: d14f6e81897055945899d510461b0a2c1dc24856e7c7049b52567a1bbc6be995
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb1_1.13.1-2+sign_loongarch64.deb
+    digest: 8d99e764693063cba0f8d8e8b52fc632f2832ca5f9319ccce3d98ae8c787538b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcb/libxcb1-dev_1.13.1-2+sign_loongarch64.deb
+    digest: d7b758683aef8b7f765f77adb950c67f1b19287387ac1ef463a63520c356f613
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxcursor/libxcursor1_1.1.15.1-deepin1_loongarch64.deb
+    digest: 878af0e825a7372a09dabbfad159b5e631519061ca7f3ac51f3eafa096098214
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxdamage/libxdamage-dev_1.1.4.2-1+rebuild_loongarch64.deb
+    digest: b099217d320cff27a1b67149a06022e9faa56fe371b97e95f660b8e6aa8de7c3
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxdamage/libxdamage1_1.1.4.2-1+rebuild_loongarch64.deb
+    digest: bd308c0e0b2886c7e4f0cb159de23b8b75add27486ab8a0f972ecafbc2ddc5f5
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxdmcp/libxdmcp-dev_1.1.2-3_loongarch64.deb
+    digest: 4d3db902fe061f680d4a18fada1b4f916f2336a0596d4ec1f1b1e77740528d64
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxdmcp/libxdmcp6_1.1.2-3_loongarch64.deb
+    digest: 28656fdd389833cc89d61277f1347723f99f1a54fba10a1ae82842d1b9c3731f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxext/libxext-dev_1.3.3.1-1+rebuild_loongarch64.deb
+    digest: 2c7e24339af742e800d9f82b9201f4e2e6bc64705bf68121b2cc55ef136b7321
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxext/libxext6_1.3.3.1-1+rebuild_loongarch64.deb
+    digest: 5d0151145e62c696bdb1cc8069e9c7ca0eaca68784e942ae2eddaf85184a66ab
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxfixes/libxfixes-dev_5.0.3-1_loongarch64.deb
+    digest: ebf97cd670f23acbd1356d43ecad04ed6fe1bf6d23b9cf051feda4d620bf834d
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxfixes/libxfixes3_5.0.3-1_loongarch64.deb
+    digest: 3d1ced9a3f5f53c20d0a77e69d3945ca11e320cbf8d728cb6ded9b6024162089
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxi/libxi-dev_1.7.9-1_loongarch64.deb
+    digest: 02997af0e07c8fb491182da892aad2bc4cee3d528f773a495df31c10bc05321e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxi/libxi6_1.7.9-1_loongarch64.deb
+    digest: 7d61a0217dfde93375a200d6b5049025f62f1aae7f7eb4ba177babfad1120a20
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxinerama/libxinerama1_1.1.4-2_loongarch64.deb
+    digest: 7bcb9a581f6e2217ac072b1e18d79a0d8747a26ae7231af002b3c87d37f8c22c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxkbcommon/libxkbcommon-x11-0_0.8.2-1_loongarch64.deb
+    digest: 9887c6d026a11caca1a2a6f4bdf616ff2634aa0175c7abfdde63334223fe133c
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxkbcommon/libxkbcommon0_0.8.2-1_loongarch64.deb
+    digest: 8e90972589cd08374118cc2618fc97e81e01eb7c9222c4e3905f2e20182bd78e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxml2/libxml2_2.9.4.6.3-deepin1_loongarch64.deb
+    digest: 1c1e6502fbf1dd44e89f7a5baafd0e79ec34b66a8327f17aba2a3b0c81649605
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxrandr/libxrandr2_1.5.1-1_loongarch64.deb
+    digest: 6c24b154bb527715b193e42909a931b57562058a4602d7542a4272954437613e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxrender/libxrender1_0.9.10-1_loongarch64.deb
+    digest: 783be4b414101cd7064d94a90f0c748a73e439e5509522045085392f2ba1edbc
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxshmfence/libxshmfence-dev_1.3-1_loongarch64.deb
+    digest: 00db1f5fdf7029ba3fd7c1f8bc2f159da720ed771dc4fd89e7226626ae0eff03
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxshmfence/libxshmfence1_1.3-1_loongarch64.deb
+    digest: 0761ca0c49306353f9f31e87142c1791982207e9e93f13a896adbb98a41d5986
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxss/libxss1_1.2.3-1_loongarch64.deb
+    digest: 57bf62f635f101b651523dd96b99b0594a79bcfd3ec4f27b6dbb6a544d4f3095
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxtst/libxtst-dev_1.2.3-1_loongarch64.deb
+    digest: 48a9567df2ae2c3623ce4175abb5a3ad44d225a24aa0ea3ad3ab6fe4023dc07b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxtst/libxtst6_1.2.3-1_loongarch64.deb
+    digest: 316b04f017feba4912453bfa5d23f3da5467e0f603f235faa10d1f5ee4eede7e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxv/libxv1_1.0.11-1_loongarch64.deb
+    digest: 2da83e27d5566e7eb4133481dd9d2969cfcde832a63811be6f62b97fdd0de4c7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xvidcore/libxvidcore4_1.3.5-1_loongarch64.deb
+    digest: 78f925f018f66f9d7ca6d39984b3195ad5c8de72e1449dc2834f192484b30f33
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxxf86vm/libxxf86vm-dev_1.1.4.1-1+rebuild_loongarch64.deb
+    digest: 5f871f494526be94be4181b8c2666f07c836f4bc0e2a3a8873ed594a771113af
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libx/libxxf86vm/libxxf86vm1_1.1.4.1-1+rebuild_loongarch64.deb
+    digest: fe6da4a925e290a0a51ceef6013a11cfea0e3236390c404e681abc012c9ea11f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/z/zimg/libzimg2_3.0.3+ds1-1_loongarch64.deb
+    digest: 082c4849c802b45bbb39f140276d8359d494524e39bc6792e704b95a951c8a0f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/z/zeromq3/libzmq5_4.3.1.2-1_loongarch64.deb
+    digest: 34464374d5be39b3354bf489c55bcd9d12cbb401991414423c2b2cca97fdcb5b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/libz/libzstd/libzstd1_1.3.8+dfsg.1-1+security_loongarch64.deb
+    digest: 5a3206a0d913c6ec751d962239f43b198837b3d4eae9bd126f6586cfdd0a4875
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/z/zvbi/libzvbi-common_0.2.35-16_all.deb
+    digest: 5eea3f86857626ce4371a8a70ba9ce89f1abfc47ed033d1de12ebc0c7d1dd3ea
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/z/zvbi/libzvbi0_0.2.35-16_loongarch64.deb
+    digest: 94708aaf4755b616ebf3059585d5e8b4d7db4deb685e1955f48cdcad8e7a72ff
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/linux-4.19.0-loongson-3-desktop/linux-libc-dev_4.19.90-4204_loongarch64.deb
+    digest: 114de610575167ae8686b8f9c7baf9cae1451799a29a13b3c411cb74383496d9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/shadow/login_4.5.7-1+dde_loongarch64.deb
+    digest: bbf7cd3866a6d0fc8eb25006e77d511772051a8c32b59f98142f857242cdca39
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/lsb/lsb-base_10.2019051400+d1_all.deb
+    digest: 2c28d9e59c550bf46a2e7468f6f786aa6069f4def4ddcc53e173022d12917228
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/l/lshw/lshw_02.18.85.5-1+dde_loongarch64.deb
+    digest: 62dbed6bfded0acdc534963283a39889f7171920b8164fe2160a7055cdd53ce4
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/make-dfsg/make_4.2.1.1-1+dde_loongarch64.deb
+    digest: 777427802e9b34685c340e2f7baceb4ea91f2a0b22726d793828fc447b499cf0
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mesa/mesa-common-dev_19.2.6.11-1_loongarch64.deb
+    digest: 0dbd0eeaae334fa1437900cc024bd44741301b6a7b8b370fe2cf362ca0b5d7f7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/m/mime-support/mime-support_3.62_all.deb
+    digest: 776efd686af26fa26325450280e3305463b1faef75d82b383bb00da61893d8ca
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/u/util-linux/mount_2.33.1.21-1+dde_loongarch64.deb
+    digest: d0ce2c46af312b31eefc1e8fcaa6ff9d5cb487b0a9848d73bb8e4923cbd3755f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/o/ocl-icd/ocl-icd-libopencl1_2.2.12-2_loongarch64.deb
+    digest: cb033d7c0c9c55578f9ef47619aa46c172e427e902520f9c641b828dc11ea188
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/shadow/passwd_4.5.7-1+dde_loongarch64.deb
+    digest: feb256ee8c3ee9dbaf200e4f905ec4004a7a5add22736a8ce2129fe67b544d9e
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/patch/patch_2.7.6.1-1+dde_loongarch64.deb
+    digest: c81c3e748af978bfe9946ca45749c09efcc7e601e8bccc623e98f9b727bd1983
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/perl/perl_5.28.1.2-6+deb10u1_loongarch64.deb
+    digest: 0f242b3f9557dd6f55dc37a6476ab9c609a6cc7516318af27924db18cacdca44
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/perl/perl-base_5.28.1.2-6+deb10u1_loongarch64.deb
+    digest: 3990139cb46320ac2bf09fefa86136067dec9a1b5607ad5d47c873b168e718b9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/perl/perl-modules-5.28_5.28.1.2-6+deb10u1_all.deb
+    digest: 961a6ee3a76d8854b5a48ae1b8bea69156dff032e2021d9f22e48e66d0de4bb3
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/pkg-config/pkg-config_0.29.2-1+dde_loongarch64.deb
+    digest: d8de59accfd8177cb3a68d7ac524d62781c28dfa0595cdd25b63657feee9b333
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python-defaults/python_2.7.16-1_loongarch64.deb
+    digest: 48dfffd892b4ed39e248b2441ed6d3bdcf0955b50347c64ef86fd4343f3f4426
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python-defaults/python-minimal_2.7.16-1_loongarch64.deb
+    digest: d1735e45d1b72912bcb1a4f166c2a38dfc0996338e1efbb86f6a9d843c54f596
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python-defaults/python2_2.7.16-1_loongarch64.deb
+    digest: 23799fe955cc750972639aa5699bfadd0e9166fea120718db7fc413d1d15f459
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python-defaults/python2-minimal_2.7.16-1_loongarch64.deb
+    digest: 736017617dcd672c0f98da498ba6fe803987ca6573c521f94028efd3cb03c4dd
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python2.7/python2.7_2.7.16.12-deepin1_loongarch64.deb
+    digest: 1486055a49ba48c1c03a6510fc78dd9693c00b8364e1b3d4b8b8e53a07ce3232
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python2.7/python2.7-minimal_2.7.16.12-deepin1_loongarch64.deb
+    digest: aa2f5596f15b2961e2538bde1c446e06ed5d81ead683807cb41d7e6e5e5533f9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python3-defaults/python3_3.7.3-1_loongarch64.deb
+    digest: 1600c1e38ff32a4347480a2cf0a4c2d8402e69856130ac333fbabdcb3a7bd3d2
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python3-stdlib-extensions/python3-distutils_3.7.3-1_all.deb
+    digest: 6918af11061d3141990e78f5ad0530ec0f9a188cac27113d9de2896203efc13f
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python3-stdlib-extensions/python3-lib2to3_3.7.3-1_all.deb
+    digest: 227e2a2d12922c00dee9e55d8c5b889cfc5e72a54b85c2a509fa1664c2e9e137
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python3-defaults/python3-minimal_3.7.3-1_loongarch64.deb
+    digest: f74851ca95283eca25f6f67a78ae91f22d9a6788ebbf5b27a2e35da6432d5ac9
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python3.7/python3.7_3.7.3.17-1+dde_loongarch64.deb
+    digest: 710d0f7499b4a43613a04dde65aa469ddee7163bdf67283423d1ac413fea4556
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/p/python3.7/python3.7-minimal_3.7.3.17-1+dde_loongarch64.deb
+    digest: c4e10ef07344c2e05b4d1f4fc410c4df882c9eeaf9fc75aa6ff7d7dc87af1c98
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtimageformats-opensource-src/qt5-image-formats-plugins_5.11.3-2_loongarch64.deb
+    digest: 0ee9b158ed710d3e0c828427a5241ed9ce05cccf7dad71ada7f30529aad94ae8
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/qt5-qmake_5.11.3.64-1+dde_loongarch64.deb
+    digest: e22b53fae0b349c71a81d3d1627c65e528cb64fc14d7a2c22c69c8fe3c9df16d
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/qt5-qmake-bin_5.11.3.64-1+dde_loongarch64.deb
+    digest: 294f707dba518859177784a27f5e5e626a6dff55793ba4ec9e03d62562dd5c25
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/qtbase5-dev_5.11.3.64-1+dde_loongarch64.deb
+    digest: 1c8ff89e5611483329f806d66d34ba7dd626be9981b9e928b86b03949db23348
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtbase-opensource-src/qtbase5-dev-tools_5.11.3.64-1+dde_loongarch64.deb
+    digest: 528dafdb0e50ee1fc5e3e749c2f187f423f0f1cda5943e3824049a0673074737
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/q/qtchooser/qtchooser_66-2_loongarch64.deb
+    digest: b103a2a085308feff03b1e64ba171b60914cb6c9350ffe4acf59809ca51ca9ed
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/r/readline/readline-common_7.0-5+sign_all.deb
+    digest: 6700eaadb1764a96a7bf4844176ff15d049dd61706f39dd2f7f816980f8357fa
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/sensible-utils/sensible-utils_0.0.12_all.deb
+    digest: 2043859f8bf39a20d075bf52206549f90dcabd66665bb9d6837273494fc6a598
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/shared-mime-info/shared-mime-info_1.10.1-1+eagle_loongarch64.deb
+    digest: 1b9c92b3efdc05dd62efe0597c79ae2c973933d5a9fe2ca79bd5b2381ad88891
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/systemd/systemd_241.61-deepin1_loongarch64.deb
+    digest: 86210654bdd29059f05cd91a5c4a128fbc50cc8acfa2f2d3d2bb64be990fda22
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/s/systemd/systemd-sysv_241.61-deepin1_loongarch64.deb
+    digest: 685172508047ae705743673c13b490ea8dc76a68db30397e5f31889e6e2118d8
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/t/tar/tar_1.30+dfsg.3-deepin1_loongarch64.deb
+    digest: e3259bb1e19d03c36e3b75ce1899fe094500b4cfa8a7dc1ef6d1c5bb5cd8b120
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/t/ttf-bitstream-vera/ttf-bitstream-vera_1.10-8_all.deb
+    digest: b1048bf463f5e742c9e396e814774dc543d9b982f59df804ec5da0d5a4520bcd
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/u/ucf/ucf_3.0039+nmu1_all.deb
+    digest: 5f503feb32830bba73f937867e3dd271c1fd0ea9ed5ea92e3babc0fc3dd32f90
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/u/util-linux/util-linux_2.33.1.21-1+dde_loongarch64.deb
+    digest: e494ff83d2512f4682b56377ff69b8f35d548ab7432a3eaab8983c664b459852
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/u/util-linux/uuid-dev_2.33.1.21-1+dde_loongarch64.deb
+    digest: 441265a65c19d0ceb91fba8533ef7b3b4e61a439b774aac8dbe8f2827afe450b
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xorg/x11-common_7.7.1+dde_all.deb
+    digest: 8a3205c972d49dfb16cfd55a2e8c75ec4888897adec4dbb3a2bd0dc8768b9768
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xorgproto/x11proto-core-dev_2018.4-4_all.deb
+    digest: 8bdb72e48cac24f5a6b284fea4d2bd6cb11cbe5fba2345ce57d8017ac40243cb
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xorgproto/x11proto-damage-dev_2018.4-4_all.deb
+    digest: 33b9b97e107f01f537108143aca6c087eef71ebf46c0f2dd3194b02bf3ef6450
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xorgproto/x11proto-dev_2018.4-4_all.deb
+    digest: aa0237467fcb5ccabf6a93fc19fae4d76d8c6dfbf9e449edda5f6393e50d8674
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xorgproto/x11proto-fixes-dev_2018.4-4_all.deb
+    digest: c4bb58f037c0de0ccd9c1021c3bd89de9236f5ac0db64fcd4cb8b636b14a5d64
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xorgproto/x11proto-input-dev_2018.4-4_all.deb
+    digest: 364edce8bb7cf3187c1e81d37ea5b8f6b6ddd3a74c4c82efa1810dd451bbddbf
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xorgproto/x11proto-record-dev_2018.4-4_all.deb
+    digest: f256d29764a8baa5aa94bb94c30572b90fb0855b34bd59e9d41bb34918d84074
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xorgproto/x11proto-xext-dev_2018.4-4_all.deb
+    digest: fd5c04fa8f10bdaeadb7bde8b14534265b38fdf18de708476eefcb229a70cbc0
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xorgproto/x11proto-xf86vidmode-dev_2018.4-4_all.deb
+    digest: ab251198b55dc453015a596ed3195e7ad8a5b930f0baf4b68b72e0104c9c1501
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xcb-proto/xcb-proto_1.13-1_all.deb
+    digest: 9adf4597de086fde729bc4d5fc174f1b4627d1f63b8c24528d6fec3e6ac9df04
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xkeyboard-config/xkb-data_2.26.3-1_all.deb
+    digest: 5b31c03ff4b59306ee1ca1ba0be81b52fe7478572e992c23e4a8521585c42d6d
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xorg-sgml-doctools/xorg-sgml-doctools_1.11-1_all.deb
+    digest: 5a69300bd5315a59e8817b47f1bab2fb02daddcbd2a6caeffe02cc6514007a0a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xtrans/xtrans-dev_1.3.5-1_all.deb
+    digest: 09e4f29cf577c149293fe86ce386b3e1d54fe0b881e7982c0fdc71a9599ba3e7
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/x/xz-utils/xz-utils_5.2.4.1-1+dde+sign_loongarch64.deb
+    digest: e86b6d4dd68aebbe33eba22f75d21fb647c6055e2cc1ab16f12a4e221d227152
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/z/zlib/zlib1g_1.2.12.5-1+dde+sign_loongarch64.deb
+    digest: 0915d728a22dc421c53ae7776670e3e41a674c03e10c1c4832da0e7030352a3a
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional/pool/main/z/zlib/zlib1g-dev_1.2.12.5-1+dde+sign_loongarch64.deb
+    digest: 1d84325c850b36272ea114321c438e7f5a127e3e8cdb2bd1ebc9a703e8586792
